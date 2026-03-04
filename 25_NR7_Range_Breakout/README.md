@@ -123,3 +123,49 @@ Ye strategy NR7 pattern detect karti hai — jab current bar ka range pichle 7 b
 - Breakout pending sirf 3 bars tak valid rehta hai.
 - Higher R:R (2.5:1) compression breakouts ke explosive nature ke liye.
 - Similar to #18 Inside Bar but mathematically defined (narrowest range).
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🟡 Intermediate                  ║
+║  Risk Level:   Medium                           ║
+║  Timeframe:    4H-Daily (best)                 ║
+║  Frequency:    1-3 signals/day                  ║
+║  Hold Time:    Days                             ║
+║  Capital Need: ₹50,000+ (swing trading)         ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Range narrowing (compression)   ├── Already trending
+├── Low vol before big move         ├── Gap opening days
+├── Consolidation phases            ├── High volatility days
+├── Pharma/healthcare stocks        ├── Penny stocks
+├── Pre-event compression           ├── No clear compression
+└── Volume declining setup          └── Random narrow bar
+```
+
+## 🔗 Best Strategy Combinations
+- **#25 NR7 + #8 BB Squeeze** → Double compression = extremely powerful breakout
+- **#25 NR7 + #18 Inside Bar** → NR7 + Inside Bar = triple compression signal
+- **#25 NR7 + #1 ORB** → NR7 detected → next day ORB style breakout trade
+
+## ⚠️ Common Mistakes
+1. **Har NR7 bar trade karna** → NR7 + volume filter + trend direction chahiye
+2. **Breakout direction guess karna** → Wait karo — breakout candle direction follow karo
+3. **Dr Reddy's mein USFDA ignore** → Pharma stocks FDA decisions pe crash/rally karte hain
+4. **3-bar expiry ignore karna** → NR7 ke 3 bars mein breakout na ho toh cancel — fresh setup wait
+5. **Volume on breakout ignore** → Low volume breakout = fake, high volume = genuine
+
+## 💡 Pro Tips
+- NR7 + Inside Bar same bar pe = double compression — week mein 1-2 baar hota hai, very powerful
+- Dr Reddy's mein ANDA/FDA approval dates track karo — NR7 before announcement = big move setup
+- 3-bar expiry discipline important — stale setups work nahi karte
+- Buffer (0.1%) use karo breakout levels pe — false breakout filter hota hai
+- Weekly chart pe NR7 = multi-day breakout setup — hold for 3-5 days after breakout

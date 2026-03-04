@@ -121,3 +121,49 @@ Ye strategy Welles Wilder ka classic Parabolic SAR (Stop and Reverse) indicator 
 - SAR flip pe auto entry/exit — no manual trailing needed.
 - ADX filter default ON hai — significantly reduces false flips.
 - Classic indicator — Welles Wilder ne 1978 mein develop kiya.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🟢 Beginner                      ║
+║  Risk Level:   Medium                           ║
+║  Timeframe:    1H-4H (best)                    ║
+║  Frequency:    3-8 signals/day                  ║
+║  Hold Time:    Hours to Days                    ║
+║  Capital Need: ₹50,000+ (swing)                 ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Trending market                 ├── Sideways/range-bound
+├── Volatile conditions             ├── Choppy price action
+├── Visual dots chahiye             ├── Low volatility days
+├── Telecom/stable sectors          ├── Penny stocks
+├── Simple trailing needed          ├── Exact S/R level trading
+└── ADX > 20 (some trend)          └── News-heavy volatile days
+```
+
+## 🔗 Best Strategy Combinations
+- **#22 SAR + #5 Strong Trending** → ADX direction + SAR trailing = trend ride
+- **#22 SAR + #10 Fibonacci** → Fib entry + SAR exit = complete system
+- **#22 SAR + #19 EMA Ribbon** → Ribbon direction + SAR dots for trailing
+
+## ⚠️ Common Mistakes
+1. **Sideways mein SAR use karna** → Dots rapidly flip = losses accumulate
+2. **Default settings change nahi karna** → Stock ke volatility ke hisaab se adjust karo
+3. **Bharti Airtel mein telecom news ignore** → Tariff hike/TRAI news = big moves
+4. **SAR flip pe instant entry** → ADX > 20 filter use karo — weak flip avoid
+5. **Both directions aggressively trade** → Trend direction mein SAR flip = better edge
+
+## 💡 Pro Tips
+- SAR dots close to price = trend acceleration — momentum strong hai
+- Bharti Airtel mein ARPU data (quarterly) = key catalyst for trend moves
+- ADX filter ON karo (> 20) — significantly reduces false SAR flips
+- SAR + EMA (50) alignment = SAR flip ke saath trend confirmation
+- Start = 0.02, Increment = 0.02, Max = 0.2 — standard settings most stocks ke liye

@@ -124,3 +124,49 @@ Ye strategy tab entry leti hai jab established trend mein price Fibonacci "golde
 - Golden zone (38.2%–61.8%) sabse zyada probability wala S/R zone hai.
 - Doosre confluence (S/R levels, trendlines, volume) ke saath best kaam karta hai.
 - Higher R:R (2.5:1) swing extension target karta hai original high/low ke baad.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🟡 Intermediate                  ║
+║  Risk Level:   Medium                           ║
+║  Timeframe:    1H-4H (best)                    ║
+║  Frequency:    1-3 signals/day                  ║
+║  Hold Time:    Days                             ║
+║  Capital Need: ₹50,000+ (swing trading)         ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Trending market (pullback)      ├── Sideways/no clear swing
+├── Clear swing high/low exists     ├── Gap opening days
+├── Price at 0.5-0.618 zone         ├── No volume on bounce
+├── Weak trend pullback             ├── V-shape reversal (no PB)
+├── EMA support near fib level      ├── Overextended moves
+└── Higher TF trend intact          └── Penny/illiquid stocks
+```
+
+## 🔗 Best Strategy Combinations
+- **#10 Fib + #5 Strong Trending** → ADX confirms trend, Fib gives entry level
+- **#10 Fib + #19 EMA Ribbon** → EMA Ribbon direction + Fib pullback entry
+- **#10 Fib + #22 Parabolic SAR** → SAR trailing stop after Fib entry
+
+## ⚠️ Common Mistakes
+1. **Wrong swing points select karna** → Recent clear swing use karo, random nahi
+2. **Sirf 0.382 pe entry** → 0.5-0.618 (golden zone) better hai — deeper pullback = stronger
+3. **Trend direction ignore karna** → Uptrend mein sirf long Fib, downtrend mein sirf short
+4. **SBI mein results ke din Fib trade** → Major events se pehle Fib levels unreliable
+5. **Every pullback trade karna** → Fib + EMA + volume confluence = trade, akela Fib weak
+
+## 💡 Pro Tips
+- 0.618 + 50 EMA confluence = strongest pullback entry point
+- SBI/banking stocks mein RBI policy ke around Fib levels very well respected hote hain
+- Higher TF Fib level + lower TF entry = best approach
+- Fib extension 1.618 level as target use karo — very common take-profit level
+- Volume dry up on pullback + volume spike on bounce = classic institutional buying

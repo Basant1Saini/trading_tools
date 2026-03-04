@@ -121,3 +121,49 @@ Ye strategy abnormal volume spikes detect karti hai (2.5x+ average volume) aur R
 - "VOL↑" / "VOL↓" labels reversal entry points pe dikhte hain.
 - Small yellow diamonds = volume spike without reversal signal (watch only).
 - Higher R:R (2.5:1) because reversal trades need more room.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🔴 Advanced                      ║
+║  Risk Level:   High                             ║
+║  Timeframe:    4H-Daily (best)                 ║
+║  Frequency:    1-3 signals/week                 ║
+║  Hold Time:    Days                             ║
+║  Capital Need: ₹2,00,000+ (counter-trend risk)  ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Volume 2.5x+ above average     ├── Strong trend (not extreme)
+├── RSI extreme zone               ├── Low volume conditions
+├── Reversal candle pattern         ├── No clear candle pattern
+├── Key S/R level pe               ├── Mid-range (no level)
+├── Climax volume (exhaustion)      ├── Continuation volume
+└── PSU/utility stocks              └── Penny/micro cap stocks
+```
+
+## 🔗 Best Strategy Combinations
+- **#23 Vol Spike + #3 RSI Extremes** → Volume spike + RSI extreme = strong reversal signal
+- **#23 Vol Spike + #14 MACD Div** → Volume + MACD divergence = institutional reversal
+- **#23 Vol Spike + #10 Fibonacci** → Fib level pe volume spike = precise reversal entry
+
+## ⚠️ Common Mistakes
+1. **Har volume spike reversal expect karna** → Continuation volume spikes bhi hote hain!
+2. **Candle pattern ignore karna** → Volume spike + hammer/shooting star = trade; spike alone = no trade
+3. **Power Grid mein govt policy ignore** → PSU stocks govt decisions pe react hote hain
+4. **Strong trend mein counter-trade** → Volume spike in trend = continuation usually, not reversal
+5. **Immediate entry** → Spike candle close hone do, next candle confirm kare tab entry
+
+## 💡 Pro Tips
+- Climax volume (2.5x+) + long wick candle = exhaustion signal — reversal likely
+- Power Grid/NTPC mein budget (Feb) + energy policy = major volume spike catalysts
+- Volume spike + RSI < 30 + hammer candle = triple confirmation — very high probability
+- Delivery volume % check karo (NSE data) — high delivery = genuine institutional activity
+- Spike volume pe price range chhota = absorption (big players absorbing supply) = reversal coming

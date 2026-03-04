@@ -119,3 +119,49 @@ Ye ek patient swing-trading strategy hai jo triple EMA alignment (50/100/200), M
 - Green/red ribbon EMA 50 aur 200 ke beech fill hota hai.
 - Arrow markers crossover aur pullback entries pe dikhte hain.
 - EMA alignment break hone pe auto exit ho jaata hai.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🟢 Beginner                      ║
+║  Risk Level:   Low                              ║
+║  Timeframe:    Daily (best), Weekly             ║
+║  Frequency:    1-3 signals/week                 ║
+║  Hold Time:    Weeks to Months                  ║
+║  Capital Need: ₹10,000+ (cash market OK)        ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Clear uptrend/downtrend         ├── Sideways market
+├── Low volatility (steady move)    ├── High volatility/choppy
+├── Quality large-cap stocks        ├── Penny stocks/SME
+├── Investment mindset              ├── Quick profit mentality
+├── Patience hai                    ├── Daily checking habit
+└── Infrequent trading preferred    └── FOMO-driven trading
+```
+
+## 🔗 Best Strategy Combinations
+- **#4 Slow + #13 Donchian** → Donchian breakout pe entry, Slow&Steady style hold karo
+- **#4 Slow + #9 Ichimoku** → Ichimoku se direction confirm, EMA crossover pe entry
+- **#4 Slow + #21 Chandelier** → Chandelier Exit se trailing stop manage karo
+
+## ⚠️ Common Mistakes
+1. **Impatience** → Strategy weekly signals deti hai — daily check karne ki zaroorat nahi
+2. **Shorter timeframe pe switch karna** → Daily chart pe raho, 15m noise ignore karo
+3. **Infosys mein results ke din hold karna** → Major events se pehle position size reduce karo
+4. **Dip pe panic sell** → EMA hold toh hold karo, stop hit toh exit — manual panic nahi
+5. **Too many stocks track karna** → 3-5 quality large caps enough hain
+
+## 💡 Pro Tips
+- Infosys jaise stocks mein quarterly results ke 1 week pehle position reduce karo
+- Sunday ko 15-minute weekly review karo — Monday se pehle plan ready
+- SIP + Slow & Steady combo: monthly SIP mein EMA alignment check karo before adding
+- Nifty 200 EMA agar bullish hai toh individual stocks mein long bias rakho
+- Dividend-paying stocks mein Slow & Steady best kaam karta hai — double benefit

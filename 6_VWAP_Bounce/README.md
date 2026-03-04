@@ -115,3 +115,49 @@ Ye ek intraday strategy hai jo VWAP (Volume Weighted Average Price) ke around tr
 - VWAP har session reset hota hai — purely intraday tool hai.
 - VWAP bands overextended price identify karne mein madad karte hain.
 - Session end pe sab positions close ho jaati hain.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🟡 Intermediate                  ║
+║  Risk Level:   Medium                           ║
+║  Timeframe:    5m (best), 1m-15m               ║
+║  Frequency:    5-15 signals/day                 ║
+║  Hold Time:    Minutes to Hours                 ║
+║  Capital Need: ₹50,000+ (intraday margin)       ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Intraday trending day           ├── Low volume days
+├── Price VWAP ke near aaya         ├── Pre-9:30 (VWAP unstable)
+├── Institutional activity day      ├── Forex/commodity (no VWAP)
+├── Range-bound near VWAP           ├── Gap open far from VWAP
+├── High volume stocks              ├── Small cap/illiquid stocks
+└── Banking/NBFC stocks             └── Post-2:30 PM new entries
+```
+
+## 🔗 Best Strategy Combinations
+- **#6 VWAP + #1 ORB** → ORB breakout + VWAP confirmation = strong signal
+- **#6 VWAP + #11 Pivot Points** → VWAP + Pivot confluence = institutional level
+- **#6 VWAP + #20 StochRSI** → StochRSI timing + VWAP level = precise entry
+
+## ⚠️ Common Mistakes
+1. **9:15-9:30 mein VWAP trade karna** → VWAP pehle 15 min unstable hota hai
+2. **VWAP se bahut door trade karna** → VWAP ±1% ke andar hi bounce trade karo
+3. **Volume ignore karna** → VWAP bounce pe volume spike = institutional confirmation
+4. **VWAP direction ke against trade** → Rising VWAP mein long bias, falling mein short
+5. **ICICI Bank mein 1m chart pe trade** → 5m better hai banking stocks ke liye (noise filter)
+
+## 💡 Pro Tips
+- VWAP + Previous day VWAP confluence = super strong level
+- Banking stocks (ICICI, HDFC, Kotak) mein VWAP bounce best kaam karta hai
+- VWAP slope positive + price VWAP ke upar = buy on dips to VWAP
+- 10:00-10:30 ke baad VWAP stable hota hai — best trading window start
+- FII/DII data positive + price above VWAP = strong long conviction

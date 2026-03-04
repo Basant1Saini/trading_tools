@@ -108,3 +108,48 @@ Ye strategy higher timeframe ka trend check karti hai aur lower timeframe pe ent
 - Chart background green/red hota hai HTF trend direction dikhane ke liye.
 - Triangle markers entry points pe dikhte hain.
 - Higher timeframe ke against trades automatically filter ho jaate hain.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🔴 Advanced                      ║
+║  Risk Level:   High                             ║
+║  Timeframe:    15m + 1H combo                   ║
+║  Frequency:    3-8 signals/day                  ║
+║  Hold Time:    Hours to Days                    ║
+║  Capital Need: ₹2,00,000+ (multiple positions)  ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Trending market (daily)         ├── Sideways/choppy market
+├── Higher TF clear direction       ├── Conflicting TF signals
+├── Moderate volatility             ├── News-heavy volatile days
+├── Sector rotation clear           ├── All TFs giving mixed signals
+└── Gap + trend alignment           └── Low volume days
+```
+
+## 🔗 Best Strategy Combinations
+- **#2 MTF + #5 Strong Trending** → ADX se trend strength confirm karo across TFs
+- **#2 MTF + #12 Supertrend** → Higher TF Supertrend direction mein lower TF entry
+- **#2 MTF + #20 StochRSI** → Lower TF pe precise OB/OS entry timing
+
+## ⚠️ Common Mistakes
+1. **4+ timeframes use karna** → Max 3 TFs (analysis paralysis hota hai)
+2. **Lower TF signal ko priority dena** → Higher TF ALWAYS wins
+3. **Conflicting TFs mein force trade** → All TFs align na karein toh skip
+4. **TF gap bahut bada rakhna** → 1:3-1:5 ratio best (e.g., 15m:1H, 1H:4H)
+5. **Entry aur analysis same TF pe** → Analysis higher TF, entry lower TF
+
+## 💡 Pro Tips
+- Daily chart = direction, 1H = structure, 15m = entry — ye 3-layer approach best hai
+- TCS jaise IT stocks mein US market overnight move = daily bias set karta hai
+- Higher TF support/resistance pe lower TF reversal signal = high probability entry
+- Friday ko new MTF trades avoid karo — weekend gap risk
+- Sector index bhi check karo (Nifty IT for IT stocks) — one more TF of confirmation

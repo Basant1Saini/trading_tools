@@ -124,3 +124,49 @@ Ye strategy Heikin Ashi candles use karti hai jo normal candles se zyada smooth 
 - "HA↑" / "HA↓" labels entry points pe dikhte hain.
 - HA flip pe automatic exit hoti hai — jaldi profit book hota hai.
 - Best results trending markets mein aate hain, sideways mein avoid karo.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🟢 Beginner                      ║
+║  Risk Level:   Low-Medium                       ║
+║  Timeframe:    1H-4H (best)                    ║
+║  Frequency:    1-3 signals/day                  ║
+║  Hold Time:    Days                             ║
+║  Capital Need: ₹10,000+ (simple start)          ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Trending market                 ├── Sideways/choppy market
+├── Noise reduction chahiye         ├── Quick scalping trades
+├── Low volatility steady trend     ├── Gap days (misleading HA)
+├── Infra/construction stocks       ├── Result announcement days
+├── Visual simplicity chahiye       ├── Lower than 1H timeframe
+└── Swing hold karna hai            └── Exact entry price needed
+```
+
+## 🔗 Best Strategy Combinations
+- **#17 HA + #19 EMA Ribbon** → Visual trend confirmation dono taraf se
+- **#17 HA + #5 Strong Trending** → ADX confirms + HA candles show direction
+- **#17 HA + #21 Chandelier** → HA trend direction + Chandelier trailing stop
+
+## ⚠️ Common Mistakes
+1. **HA candle price pe order lagana** → HA prices modified hain — regular chart pe entry karo
+2. **Single HA color change pe entry** → 3+ consecutive same-color candles ka wait karo
+3. **L&T mein sector news ignore** → Infra budget allocation directly L&T ko impact karta hai
+4. **Lower timeframe pe HA** → 1H minimum chahiye — lower TF pe HA bhi noisy hota hai
+5. **Sideways mein HA** → Alternating green/red candles = sideways — trade avoid karo
+
+## 💡 Pro Tips
+- 3+ consecutive green HA candles with no lower wick = very strong uptrend
+- L&T mein Budget session (Feb) + infra announcements = major catalyst
+- HA chart + regular chart dono open rakho — HA for trend, regular for entry price
+- HA candle body chhota ho raha hai = trend weakening, exit prepare karo
+- Weekly HA candle green + daily HA green = high confidence swing trade

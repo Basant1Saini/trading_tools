@@ -125,3 +125,49 @@ Ye ek complete trading system hai Ichimoku Kinko Hyo indicator pe based. Paanch 
 - Green cloud = bullish, red cloud = bearish.
 - Thick cloud strong S/R, thin cloud weak S/R.
 - 5 conditions aligned = sabse high probability signal.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🔴 Advanced                      ║
+║  Risk Level:   Medium                           ║
+║  Timeframe:    4H-Daily (best)                 ║
+║  Frequency:    1-3 signals/week                 ║
+║  Hold Time:    Days to Weeks                    ║
+║  Capital Need: ₹2,00,000+ (wider stops)         ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Clear trending market           ├── Sideways/choppy market
+├── Price clearly above/below cloud ├── Price inside cloud
+├── TK cross confirmed              ├── Thin cloud (weak S/R)
+├── Chikou span clear               ├── Chikou span mixed
+├── Metal/commodity trending        ├── Range-bound banking stocks
+└── Weekly chart alignment          └── Short timeframes (< 1H)
+```
+
+## 🔗 Best Strategy Combinations
+- **#9 Ichimoku + #13 Donchian** → Ichimoku direction + Donchian breakout entry
+- **#9 Ichimoku + #4 Slow & Steady** → Ichimoku confirms, Slow&Steady holds
+- **#9 Ichimoku + #21 Chandelier** → Chandelier trailing stop with Ichimoku direction
+
+## ⚠️ Common Mistakes
+1. **Cloud ke andar trade karna** → Cloud = no-trade zone, clear break ka wait karo
+2. **Sirf TK cross pe trade** → Paancho conditions check karo — partial signal risky
+3. **Tata Steel mein fundamental ignore** → Global steel/iron ore prices directly impact
+4. **Thin cloud pe strong S/R expect karna** → Thick cloud = strong, thin = weak breakout zone
+5. **Lower timeframe pe Ichimoku** → 1H minimum chahiye — lower TFs pe noise zyada
+
+## 💡 Pro Tips
+- Paancho conditions aligned = week mein 1-2 baar hota hai — but highest probability
+- Tata Steel ka Ichimoku + China steel futures check karo — strong correlation
+- Future cloud (26 bars ahead) green/red direction change = early warning signal
+- Cloud ke upar price + green future cloud = strongest bullish setup
+- Chikou span jab price ke upar clearly ho = momentum confirmed — additional confidence

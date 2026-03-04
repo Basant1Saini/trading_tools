@@ -120,3 +120,49 @@ Ye classic EMA crossover strategy hai — Fast EMA (9) jab Slow EMA (21) ko upar
 - "GX↑" (Golden Cross) aur "DX↓" (Death Cross) labels dikhte hain.
 - Opposite cross pe automatic exit bhi hoti hai.
 - Beginner ke liye best starting strategy — simple, proven concept.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🟢 Beginner                      ║
+║  Risk Level:   Low                              ║
+║  Timeframe:    4H-Daily (best)                 ║
+║  Frequency:    1-3 signals/day                  ║
+║  Hold Time:    Days to Weeks                    ║
+║  Capital Need: ₹10,000+ (cash market OK)        ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Trending market                 ├── Sideways/range-bound
+├── Beginner learning phase         ├── Choppy market conditions
+├── Low volatility steady move      ├── High frequency trading
+├── Auto/manufacturing stocks       ├── Illiquid stocks
+├── Simple concept chahiye          ├── Quick scalping
+└── Classic proven approach         └── News-driven volatile days
+```
+
+## 🔗 Best Strategy Combinations
+- **#24 Dbl EMA + #12 Supertrend** → Supertrend confirms crossover direction
+- **#24 Dbl EMA + #14 MACD** → MACD momentum confirms crossover quality
+- **#24 Dbl EMA + #22 SAR** → SAR trailing stop after EMA crossover entry
+
+## ⚠️ Common Mistakes
+1. **Sideways mein trade karna** → Rapid golden/death crosses = whipsaw losses
+2. **200 EMA filter OFF rakhna** → 200 EMA direction ignore = 50%+ false signals
+3. **MACD confirmation skip karna** → MACD filter significantly improves win rate
+4. **M&M mein auto sales data ignore** → Monthly sales (1st week) = big catalyst
+5. **Every crossover trade karna** → Volume + MACD + 200 EMA confluence chahiye
+
+## 💡 Pro Tips
+- Golden Cross + MACD bullish + above 200 EMA = triple confirmation — highest probability
+- M&M mein SUV monthly sales data = direct stock catalyst — 1st of month check karo
+- Opposite crossover = always exit, even if profit nahi hua — discipline important
+- Daily chart pe crossover = swing trade (hold days-weeks); 4H = shorter swing
+- EMA (9,21) combo most popular — beginners ke liye proven reliable combination

@@ -123,3 +123,49 @@ Ye ek mean-reversion strategy hai jo tab entry leti hai jab RSI extreme overboug
 - RSI extreme zones mein background green/red highlight hota hai.
 - Diamond markers entry signals pe dikhte hain.
 - Divergence filter off karne se zyada signals aayenge but selectivity kam hogi.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🟡 Intermediate                  ║
+║  Risk Level:   Medium                           ║
+║  Timeframe:    15m – 1H (best)                  ║
+║  Frequency:    3-8 signals/day                  ║
+║  Hold Time:    Hours to Days                    ║
+║  Capital Need: ₹2,00,000+ (counter-trend risk)  ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Range-bound market              ├── Strong trending market
+├── Weak trend / pullbacks          ├── Breakout days
+├── Support/resistance bounce       ├── News-driven momentum
+├── RSI divergence visible          ├── Gap opening days
+├── Mean-reverting stocks           └── ADX > 30 (strong trend)
+└── Low volatility environment
+```
+
+## 🔗 Best Strategy Combinations
+- **#3 RSI + #14 MACD Divergence** → Double divergence confirmation = high probability reversal
+- **#3 RSI + #23 Volume Spike** → Volume spike + RSI extreme = smart money entry
+- **#3 RSI + #6 VWAP Bounce** → RSI extreme near VWAP = institutional level reversal
+
+## ⚠️ Common Mistakes
+1. **Strong trend mein RSI extreme trade karna** → RSI 80+ trend mein normal hai — avoid!
+2. **Sirf RSI level pe trade** → Divergence + price action chahiye, level akela weak hai
+3. **Stop loss nahi lagana** → Counter-trend trade hai — SL mandatory
+4. **Early entry** → RSI extreme se candle confirmation ka wait karo
+5. **Banking stocks mein 30/70 use karna** → Banking mein 25/75 better thresholds hain
+
+## 💡 Pro Tips
+- RSI divergence > RSI level alone — divergence zyada reliable hai
+- HDFC Bank jaise stocks mein range-bound phases mein RSI Extremes best kaam karta hai
+- RSI + support/resistance confluence = best entry points
+- Hourly RSI extreme + daily RSI normal direction = higher probability
+- Friday 2 PM ke baad RSI extreme trades avoid — weekend position risk

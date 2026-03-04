@@ -121,3 +121,49 @@ Ye strategy 6 EMAs (8, 13, 21, 34, 55, 89) ka ribbon banati hai. Jab sab EMAs ek
 - Green/red fill ribbon alignment dikhata hai.
 - Full Stack = highest confidence; Fast Cross = most signals.
 - Fanned out ribbon = strong trend; converging = weakening.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🔴 Advanced                      ║
+║  Risk Level:   Medium                           ║
+║  Timeframe:    4H-Daily (best)                 ║
+║  Frequency:    1-3 signals/week                 ║
+║  Hold Time:    Days to Weeks                    ║
+║  Capital Need: ₹2,00,000+ (positional)          ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Strong trending market          ├── Sideways/choppy market
+├── Ribbon fanning out              ├── Ribbon tangled/crossed
+├── Clear visual trend direction    ├── Weak trend environment
+├── Consumer/quality stocks         ├── Low liquidity stocks
+├── Positional trading mindset      ├── Quick scalping
+└── Fibonacci EMA lengths           └── Random EMA combinations
+```
+
+## 🔗 Best Strategy Combinations
+- **#19 Ribbon + #10 Fibonacci** → Ribbon direction + Fib pullback entry = precise
+- **#19 Ribbon + #22 Parabolic SAR** → SAR trailing stop with Ribbon trend direction
+- **#19 Ribbon + #5 Strong Trending** → ADX confirms + Ribbon shows visual direction
+
+## ⚠️ Common Mistakes
+1. **Tangled ribbon mein trade karna** → All 6 EMAs mixed = NO TRADE zone
+2. **Wrong mode select karna** → Full mode (all 6 aligned) safest, cross mode risky
+3. **Asian Paints mein sector ignore** → Paint/consumer sector rotation matters
+4. **EMA bounce miss karna** → Price 8 EMA (fastest) pe bounce = pullback entry
+5. **Too many EMAs add karna** → 6 Fibonacci EMAs (8,13,21,34,55,89) enough — more = noise
+
+## 💡 Pro Tips
+- Ribbon fanning out (expanding gap) = trend accelerating — add positions
+- Ribbon compressing (narrowing gap) = trend weakening — tighten stops
+- Asian Paints mein quarterly results + festive season = ribbon trend catalyst
+- 8 EMA (fastest) bounce = first pullback entry; 21 EMA bounce = deeper pullback entry
+- Weekly ribbon direction + daily ribbon entry = best multi-TF approach

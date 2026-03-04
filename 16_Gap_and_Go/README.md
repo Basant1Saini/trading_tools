@@ -120,3 +120,49 @@ Ye strategy opening gap trade karti hai — jab stock previous close se signific
 - "GAP↑" / "GAP↓" labels entry points pe dikhte hain.
 - Gap fill filter default ON hai — safer trades.
 - Best results trending market mein aate hain, na ki choppy days mein.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🟡 Intermediate                  ║
+║  Risk Level:   Medium-High                      ║
+║  Timeframe:    5m (best), 15m                  ║
+║  Frequency:    1-3 signals/morning              ║
+║  Hold Time:    1-3 hours (morning session)      ║
+║  Capital Need: ₹50,000+ (intraday margin)       ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Gap up/down > 0.5%             ├── No gap / flat open
+├── Volume 1.5x+ on open           ├── Extreme gap > 5%
+├── Results/news driven gap         ├── Low volume gap
+├── Gap direction continuing        ├── Gap filling immediately
+├── First 30 min window             ├── After 10:00 AM entry
+└── IT/Pharma results season        └── Random gap no catalyst
+```
+
+## 🔗 Best Strategy Combinations
+- **#16 Gap + #1 ORB** → Gap + ORB range breakout = double confirmation
+- **#16 Gap + #7 Scalper** → Gap morning mein scalp opportunities maximum
+- **#16 Gap + #6 VWAP** → Gap direction + VWAP level = strong bias
+
+## ⚠️ Common Mistakes
+1. **5% se bada gap trade karna** → Extreme gaps usually fill hote hain — avoid
+2. **First candle close se pehle entry** → 9:15-9:20 wait karo, pehla candle close hone do
+3. **Gap fill ke against trade karna** → Gap filling = momentum reverse — exit ya skip
+4. **HCL Tech results pe full size** → Results day volatile — half position se start
+5. **10:00 ke baad gap trade** → Edge sirf pehle 30-45 min hai — late entry avoid
+
+## 💡 Pro Tips
+- Results day gaps sabse reliable hote hain — genuine institutional buying/selling
+- HCL Tech/TCS mein US market overnight move = gap ka primary reason
+- Pre-market (9:00-9:15) mein expected gap calculate karo (SGX Nifty/GIFT Nifty se)
+- Gap up + open = high of day rarely → usually gap direction continue karta hai
+- Volume first 5 min candle mein 2x+ = institutional participation confirmed

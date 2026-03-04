@@ -123,3 +123,49 @@ Ye ek fast-paced scalping strategy hai jo triple EMA alignment se trend directio
 - 1x ATR stops tight hain — liquid markets aur fast execution zaroori hai.
 - Daily trade limiter har session reset hota hai.
 - Low-volume periods aur major news events ke time avoid karo.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🔴 Advanced                      ║
+║  Risk Level:   Very High                        ║
+║  Timeframe:    1m-3m (best)                    ║
+║  Frequency:    20-50 signals/day                ║
+║  Hold Time:    Seconds to Minutes               ║
+║  Capital Need: ₹10,00,000+ (brokerage cost)     ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Volatile market (9:15-10:30)    ├── Lunch hours (11:30-1:00)
+├── High volume stocks only         ├── Low liquidity stocks
+├── Tight spreads available         ├── Wide spread conditions
+├── Fast execution platform         ├── Slow internet/platform
+├── Clear momentum visible          ├── Choppy/indecisive market
+└── Broker discount hai             └── Full brokerage paying
+```
+
+## 🔗 Best Strategy Combinations
+- **#7 Scalper + #1 ORB** → ORB direction mein scalps lo (directional bias)
+- **#7 Scalper + #6 VWAP** → VWAP level ke near scalps = better R:R
+- **#7 Scalper + #16 Gap and Go** → Gap morning mein scalp opportunities
+
+## ⚠️ Common Mistakes
+1. **Brokerage calculate nahi karna** → Per trade ₹20 x 50 trades = ₹1000/day brokerage!
+2. **Revenge trading** → 3 consecutive losses = 15 min break mandatory
+3. **Lunch hours mein scalp karna** → 11:30-1:00 avoid — low vol, choppy moves
+4. **Daily loss limit nahi rakhna** → Max daily loss = 1% of capital, then STOP
+5. **Tata Motors mein 1m chart** → Tata Motors liquid hai but 1m noise zyada — 3m better
+
+## 💡 Pro Tips
+- Discount broker essential: Zerodha/Groww/Dhan pe flat ₹20/trade best for scalping
+- Maximum 2-3 hours scalp karo — fatigue ke baad mistakes badhte hain
+- Tata Motors mein 9:15-10:00 window best for scalping — maximum volatility
+- Daily P&L limit set karo: +₹2000 ya -₹1000 hit → screen band karo
+- Paper trade 100 scalps before real money — speed aur discipline develop karo

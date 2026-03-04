@@ -121,3 +121,49 @@ Ye ek pure price action strategy hai jo inside bar pattern detect karti hai — 
 - "IB" diamond markers inside bars pe dikhte hain.
 - Breakout pending sirf 5 bars tak valid rehta hai — uske baad cancel.
 - Volume confirmation false breakouts filter karta hai.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🟡 Intermediate                  ║
+║  Risk Level:   Medium                           ║
+║  Timeframe:    4H-Daily (best)                 ║
+║  Frequency:    1-3 signals/day                  ║
+║  Hold Time:    Days                             ║
+║  Capital Need: ₹50,000+ (swing trading)         ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Any market condition            ├── Gap opening days
+├── Low volatility setup            ├── Very high volatility
+├── Key S/R level pe inside bar     ├── Random inside bar (no S/R)
+├── Compression visible             ├── Multiple wicks (noisy)
+├── Pharma/healthcare stocks        ├── Penny stocks
+└── After big move (consolidation)  └── News imminent (fake BO)
+```
+
+## 🔗 Best Strategy Combinations
+- **#18 IB + #25 NR7** → Inside bar + NR7 = double compression = explosive breakout
+- **#18 IB + #8 BB Squeeze** → BB squeeze + inside bar pattern = triple confirmation
+- **#18 IB + #5 Strong Trending** → ADX direction mein inside bar breakout trade
+
+## ⚠️ Common Mistakes
+1. **Har inside bar trade karna** → Sirf key S/R levels pe inside bar trade karo
+2. **Direction guess karna** → Breakout direction wait karo, predict nahi
+3. **Sun Pharma mein FDA news ignore** → FDA approvals/rejections = overnight gap risk
+4. **Volume ignore karna** → Breakout candle pe volume spike chahiye — low volume BO fake hai
+5. **Too tight stop** → Mother bar ka low/high as stop use karo — tight stop = stop hunt
+
+## 💡 Pro Tips
+- Inside bar at support/resistance = highest probability setup
+- Double inside bar (IB inside IB) = even higher probability — rare but powerful
+- Sun Pharma mein USFDA decision dates track karo — inside bar before FDA = big move coming
+- Weekly chart pe inside bar = very powerful swing trade setup (hold for 1-2 weeks)
+- Inside bar + volume dry up = energy building, breakout ke baad volume explosion expect karo

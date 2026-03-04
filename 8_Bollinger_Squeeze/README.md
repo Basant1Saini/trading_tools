@@ -120,3 +120,49 @@ Ye strategy low volatility periods detect karti hai (jab Bollinger Bands Keltner
 - Diamond "SQZ" markers squeeze fire pe dikhte hain.
 - Compression ke baad strong directional moves aate hain.
 - Higher R:R (2.5:1) post-squeeze moves ke explosive nature ke liye hai.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🟡 Intermediate                  ║
+║  Risk Level:   Medium-High                      ║
+║  Timeframe:    1H-4H (best)                    ║
+║  Frequency:    1-3 signals/day                  ║
+║  Hold Time:    Hours to Days                    ║
+║  Capital Need: ₹50,000+ (swing trading)         ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Tight BB (squeeze visible)      ├── Already expanded BB
+├── Low volatility phase            ├── Trending market (late)
+├── BB inside Keltner Channel       ├── Gap opening days
+├── Consolidation after big move    ├── News/event imminent
+├── Volume declining (pre-squeeze)  ├── Random sideways (no squeeze)
+└── Range getting narrower daily    └── Post-breakout entry
+```
+
+## 🔗 Best Strategy Combinations
+- **#8 BB Squeeze + #25 NR7** → Double compression = very powerful breakout setup
+- **#8 BB Squeeze + #5 Strong Trending** → Post-squeeze ADX rise confirms direction
+- **#8 BB Squeeze + #18 Inside Bar** → Inside bar during squeeze = triple compression
+
+## ⚠️ Common Mistakes
+1. **Squeeze ke andar entry lena** → Breakout ka wait karo, squeeze mein patience rakho
+2. **Direction guess karna** → Momentum indicator direction follow karo, guess nahi
+3. **Bajaj Finance mein tight SL** → Wide ATR stocks mein SL wider rakho
+4. **Squeeze release ke baad late entry** → First 2-3 breakout candles mein enter karo
+5. **Squeeze count ignore karna** → Longer squeeze = bigger breakout — patience!
+
+## 💡 Pro Tips
+- BB width indicator use karo — jab lowest value pe ho, squeeze ready hai
+- Bajaj Finance mein quarterly results ke pehle squeeze bahut common hai — set up early
+- Keltner Channel ke andar BB = confirmed squeeze (visual confirmation)
+- Squeeze ke baad volume spike = genuine breakout, low volume breakout = fake
+- Weekly chart pe squeeze → Daily chart pe breakout trade karo (multi-TF approach)

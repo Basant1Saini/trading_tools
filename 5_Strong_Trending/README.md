@@ -137,3 +137,49 @@ Ye ek aggressive momentum strategy hai jo sirf tab entry leti hai jab multiple c
 - Yellow dots volume spikes mark karte hain.
 - "STRONG" labels entry pe dikhte hain.
 - Strategy trend exhaustion pe exit karti hai, fixed targets pe nahi — winners ko run karne deti hai.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🟡 Intermediate                  ║
+║  Risk Level:   Medium                           ║
+║  Timeframe:    1H (best), 15m-4H               ║
+║  Frequency:    3-8 signals/day                  ║
+║  Hold Time:    Hours to Days                    ║
+║  Capital Need: ₹50,000+ (pyramiding ke liye)    ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── ADX > 25 (trend confirmed)     ├── ADX < 20 (no trend)
+├── Volatile breakout days          ├── Sideways/range-bound
+├── Sector-wide momentum            ├── Low volume environment
+├── News-driven strong moves        ├── Contradictory indicators
+├── Volume 1.5x+ above average     ├── ADX declining from peak
+└── EMA alignment clear             └── Overextended (ADX > 50)
+```
+
+## 🔗 Best Strategy Combinations
+- **#5 Strong + #12 Supertrend** → Supertrend flip + ADX strong = entry
+- **#5 Strong + #21 Chandelier** → Chandelier trailing stop for trend riding
+- **#5 Strong + #19 EMA Ribbon** → Visual trend confirmation + momentum
+
+## ⚠️ Common Mistakes
+1. **ADX < 25 mein trade karna** → Score 4/5 minimum chahiye, 3/5 risky hai
+2. **Zyada pyramiding** → Max 2 adds — 3rd pyramid usually late hota hai
+3. **ADX declining ignore karna** → ADX peak se girne laga = trend exhaustion
+4. **Adani/volatile stocks mein full size** → News-driven stocks mein half size se start
+5. **Trailing stop na lagana** → ATR trailing must hai — momentum stocks sharply reverse hote hain
+
+## 💡 Pro Tips
+- Momentum Score 5/5 rare hai (week mein 1-2 baar) but very high conviction
+- ADX 40+ pe pyramid, but ADX 50+ pe NEW trades avoid — overextended signal
+- Adani group stocks mein SEBI news/short seller reports pe instant exit karo
+- Sector momentum check karo — Nifty Metal/IT/Bank strong toh individual stocks follow karenge
+- Morning 10:00-11:00 mein trend establish hota hai — ye window pe focus karo

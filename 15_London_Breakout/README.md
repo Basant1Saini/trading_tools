@@ -126,3 +126,49 @@ Ye ek forex-focused strategy hai jo Asian session ki range ka breakout London op
 - "LDN" labels breakout entries pe dikhte hain.
 - Session times apne chart ke timezone se adjust karo.
 - High London session volume wale pairs pe best kaam karta hai.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🔴 Advanced                      ║
+║  Risk Level:   High                             ║
+║  Timeframe:    15m (best), 5m-30m              ║
+║  Frequency:    1-2 signals/session              ║
+║  Hold Time:    2-6 hours                        ║
+║  Capital Need: ₹2,00,000+ (forex margin)        ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Forex/currency pairs            ├── Equity stocks
+├── Trending forex environment      ├── RBI policy day
+├── Tight Asian range formed        ├── Wide Asian range (>1%)
+├── London session overlaps         ├── US holiday (low vol)
+├── Clear session boundaries        ├── INR pairs on low vol day
+└── USD/INR, EUR/INR pairs          └── Exotic currency pairs
+```
+
+## 🔗 Best Strategy Combinations
+- **#15 London BO + #1 ORB** → Similar concept, use ORB logic for breakout timing
+- **#15 London BO + #11 Pivot Points** → Daily pivots as targets for London breakout
+- **#15 London BO + #12 Supertrend** → Supertrend direction = breakout bias
+
+## ⚠️ Common Mistakes
+1. **Session times galat set karna** → IST mein Asian = 4:00-12:30, London = 12:30-21:00
+2. **RBI policy day pe trade** → RBI announcement se INR volatile — session irrelevant
+3. **Asian range too wide trade karna** → Tight Asian range (< 0.5%) = better breakout
+4. **USD/INR mein dollar index ignore** → DXY movement INR ko directly affect karta hai
+5. **Overnight position hold karna** → Forex session strategy hai — session end pe exit
+
+## 💡 Pro Tips
+- USD/INR best pair for London Breakout — good liquidity + clear session impact
+- Asian range 12:30-2:30 PM IST (Indian time) mein check karo
+- DXY (Dollar Index) direction = USD/INR ka broad direction — daily check karo
+- RBI intervention rumours mein INR pairs mein extra caution rakho
+- EUR/INR less liquid — USD/INR se start karo, then expand

@@ -118,3 +118,49 @@ Ye strategy Chandelier Exit indicator use karti hai — jo highest high se ATR k
 - Background green = bullish direction; red = bearish.
 - "CHAN↑" / "CHAN↓" labels direction flip pe dikhte hain.
 - 3.0 ATR multiplier gives room for normal pullbacks.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🔴 Advanced                      ║
+║  Risk Level:   Medium                           ║
+║  Timeframe:    Daily-Weekly (best)             ║
+║  Frequency:    1-3 signals/month                ║
+║  Hold Time:    Weeks                            ║
+║  Capital Need: ₹2,00,000+ (wide stops)          ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Trending market (clear)         ├── Sideways/choppy market
+├── Volatile breakout confirmed     ├── Range-bound conditions
+├── Quality stocks (Titan etc)      ├── Penny/illiquid stocks
+├── Swing/positional trades         ├── Intraday scalping
+├── Trailing stop system needed     ├── Fixed target trades
+└── Let profits run mindset         └── Quick profit mindset
+```
+
+## 🔗 Best Strategy Combinations
+- **#21 Chandelier + #5 Strong Trending** → ADX entry signal + Chandelier trailing
+- **#21 Chandelier + #9 Ichimoku** → Ichimoku direction + Chandelier exit management
+- **#21 Chandelier + #12 Supertrend** → Two trailing systems comparison for better exits
+
+## ⚠️ Common Mistakes
+1. **ATR multiplier too tight (< 2.0)** → Normal pullbacks mein stop hit hoga — 3.0 default sahi hai
+2. **Choppy market mein use karna** → Frequent flips = death by 1000 cuts
+3. **Titan mein gold price ignore** → Gold price rally = Titan rally, gold crash = Titan weak
+4. **Direction flip pe immediate entry** → Flip + volume/momentum confirm karo, blind entry nahi
+5. **Both directions trade karna** → Trending stocks mein sirf trend direction trade karo
+
+## 💡 Pro Tips
+- ATR multiplier 3.0 = sweet spot for daily chart — minor pullbacks filter hote hain
+- Titan mein festive season (Oct-Dec) = strongest uptrends — Chandelier pe ride karo
+- "Use Close" mode ON smoother signals deta hai vs High/Low mode
+- Chandelier + 200 EMA filter = sirf major trend direction mein trade
+- Weekly chart pe Chandelier flip = multi-month positional trade signal

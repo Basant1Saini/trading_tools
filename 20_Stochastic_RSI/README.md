@@ -121,3 +121,49 @@ Ye strategy RSI pe Stochastic oscillator lagati hai — double-smoothed momentum
 - Green = oversold, Red = overbought color coding.
 - StochRSI normal RSI se zyada sensitive hai — tighter stops recommended.
 - Trend filter false signals significantly kam karta hai.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🟡 Intermediate                  ║
+║  Risk Level:   Medium-High                      ║
+║  Timeframe:    15m-1H (best)                   ║
+║  Frequency:    3-8 signals/day                  ║
+║  Hold Time:    Hours                            ║
+║  Capital Need: ₹50,000+ (intraday/swing)        ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Range-bound market              ├── Strong trending market
+├── Weak trend pullbacks            ├── Breakout momentum days
+├── Precise timing needed           ├── Trending ADX > 30
+├── Banking/financial stocks        ├── Gap opening trades
+├── OB/OS zones clear               ├── Choppy unclear market
+└── S/R levels identified           └── News-driven moves
+```
+
+## 🔗 Best Strategy Combinations
+- **#20 StRSI + #6 VWAP** → VWAP level pe StochRSI OB/OS = precise intraday entry
+- **#20 StRSI + #11 Pivot** → Pivot level pe StochRSI timing = institutional level trade
+- **#20 StRSI + #14 MACD** → MACD divergence + StochRSI OB/OS = double confirmation
+
+## ⚠️ Common Mistakes
+1. **Har OB/OS pe trade karna** → Sirf key levels (S/R, VWAP, Pivot) pe OB/OS trade karo
+2. **Trending mein OB/OS trade** → Uptrend mein StRSI OB normal hai — avoid shorting
+3. **K/D cross wait nahi karna** → StRSI extreme + K/D cross = entry, sirf extreme weak
+4. **Kotak Bank mein RBI ignore** → Banking stocks RBI policy pe directly react hote hain
+5. **Multiple signals ek saath** → Ek trade at a time — signal overlap mein confusion
+
+## 💡 Pro Tips
+- StochRSI OB/OS + trend direction mein = pullback entry (not reversal) — zyada safe
+- Kotak Bank/banking stocks mein RBI policy weeks pe StochRSI signals extra strong
+- K line D line ke upar cross from OS (< 20) = strongest buy signal
+- 15m StochRSI + 1H trend direction = best intraday combo
+- Divergence on StochRSI (price new high, StRSI lower high) = very early reversal warning

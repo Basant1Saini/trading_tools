@@ -122,3 +122,49 @@ Richard Dennis ke legendary Turtle Trading system pe based hai. 20-period Donchi
 - "TURTLE" labels breakout entries pe dikhte hain.
 - Skip filter false breakouts ke losses kam karta hai.
 - Systematic strategy hai — rules mechanically follow karo.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🔴 Advanced                      ║
+║  Risk Level:   Medium-High                      ║
+║  Timeframe:    Daily-Weekly (best)             ║
+║  Frequency:    1-3 signals/month                ║
+║  Hold Time:    Weeks to Months                  ║
+║  Capital Need: ₹2,00,000+ (drawdown buffer)     ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Strong trending market          ├── Sideways/range-bound
+├── Commodity/metal stocks          ├── Weak trend/low ADX
+├── Breakout with volume            ├── Small cap/illiquid
+├── Patience for weeks hold         ├── Impatient trading style
+├── Systematic rule-following       ├── Discretionary exits
+└── Position sizing discipline      └── Over-leveraging
+```
+
+## 🔗 Best Strategy Combinations
+- **#13 Donchian + #9 Ichimoku** → Ichimoku direction confirm + Donchian breakout
+- **#13 Donchian + #4 Slow & Steady** → Donchian entry + Slow&Steady hold style
+- **#13 Donchian + #21 Chandelier** → Chandelier trailing with Donchian breakout
+
+## ⚠️ Common Mistakes
+1. **Jaldi exit karna (drawdown se dar)** → Turtle system mein 10-20% drawdown normal hai
+2. **Pyramid position bahut badi** → Per-add max 0.5-1% risk, total max 2%
+3. **ITC mein unrealistic expectations** → ITC slow mover — patient raho, target realistic
+4. **20-day breakout ignore karke lower entry** → System follow karo — entries predefined hain
+5. **Sideways market mein Donchian** → Channel tight hai = no breakout, avoid!
+
+## 💡 Pro Tips
+- Turtle Trading original rules follow karo — 20-day breakout entry, 10-day exit
+- ITC mein FMCG sector momentum check karo — sector rotation mein ITC late mover hai
+- Pyramiding: har breakout add pe stop tighten karo — net risk same rakhne ke liye
+- Monthly chart pe Donchian channel break = multi-month trend start signal
+- Win rate 35-40% expected hai — R:R 3:1+ se system profitable banta hai

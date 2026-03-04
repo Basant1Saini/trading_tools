@@ -121,3 +121,49 @@ Ye ek clean trend-following strategy hai Supertrend indicator ke saath, jo dynam
 - Background shading jab dono Supertrends agree karein.
 - Supertrend flip pe auto exit — fixed targets ki zaroorat nahi.
 - Trending markets mein bahut effective; choppy conditions avoid karo.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🟢 Beginner                      ║
+║  Risk Level:   Low-Medium                       ║
+║  Timeframe:    15m-1H (best)                   ║
+║  Frequency:    3-8 signals/day                  ║
+║  Hold Time:    Hours to Days                    ║
+║  Capital Need: ₹10,000+ (simple to start)       ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Trending market clearly         ├── Sideways/choppy market
+├── Volatile breakout days          ├── Range-bound conditions
+├── Clean price action              ├── Low liquidity stocks
+├── Liquid stocks (Wipro, TCS)      ├── News-heavy uncertain days
+├── Simple signal chahiye           ├── Already in extended trend
+└── Dynamic trailing stop needed    └── Expiry day whipsaws
+```
+
+## 🔗 Best Strategy Combinations
+- **#12 Supertrend + #5 Strong Trending** → ADX confirms trend, Supertrend gives entry/exit
+- **#12 Supertrend + #21 Chandelier** → Two trailing systems ke comparison se better exits
+- **#12 Supertrend + #2 MTF** → Higher TF Supertrend direction mein lower TF trade
+
+## ⚠️ Common Mistakes
+1. **Choppy market mein trade karna** → Supertrend rapidly flip karti hai — losses accumulate
+2. **Single Supertrend rely karna** → Dual mode ON karo — fewer but better signals
+3. **Wipro mein tight factor** → IT stocks mein Factor 3.0 better hai (wider stops)
+4. **Every flip trade karna** → ADX > 20 filter lagao — weak flips avoid
+5. **Opposite position immediately** → Flip pe exit, but new entry mein thoda wait karo
+
+## 💡 Pro Tips
+- Dual Supertrend mode (fast+slow agree) se false flips 60%+ filter hote hain
+- Wipro/TCS mein IT sector index direction check karo — sector trend individual stock ko drive karta hai
+- Supertrend color change on daily chart = swing trade signal; 15m = intraday
+- Higher TF green Supertrend + lower TF green flip = high conviction long
+- Nifty Supertrend green + stock Supertrend green = double confirmation

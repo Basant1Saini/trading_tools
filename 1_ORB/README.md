@@ -104,3 +104,50 @@ Ye ek intraday strategy hai jo market open hone ke baad pehle 15-minute ka high 
 - ORB zone chart pe shaded region ki tarah dikhta hai high aur low ke beech.
 - Strategy session end pe sab positions close kar deti hai — overnight risk nahi hai.
 - VWAP ya volume filters ke saath combine karo better results ke liye.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🟢 Beginner                      ║
+║  Risk Level:   Medium                           ║
+║  Timeframe:    5m (best), 15m                   ║
+║  Frequency:    5-15 signals/day                 ║
+║  Hold Time:    1-4 hours (intraday)             ║
+║  Capital Need: ₹50,000+ (intraday margin)       ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Volatile opening day            ├── Sideways/range-bound day
+├── News-driven gap + range         ├── Very small range (<0.3%)
+├── High pre-market volume          ├── Budget/RBI policy day
+├── Trending market day             ├── Low volume opening
+├── Clear ORB high/low formed       ├── Holidays ke agle din
+└── FII/DII data positive           └── Expiry day (whipsaws)
+```
+
+## 🔗 Best Strategy Combinations
+- **#1 ORB + #6 VWAP** → VWAP confluence se ORB breakout confirm karo
+- **#1 ORB + #16 Gap and Go** → Gap open pe ORB range extra strong hota hai
+- **#1 ORB + #11 Pivot Points** → Pivot levels as ORB targets use karo
+- **#1 ORB + #7 Scalper** → ORB breakout ke baad quick scalps le lo
+
+## ⚠️ Common Mistakes
+1. **Range bahut chhota hone pe bhi trade karna** → Min ₹10-15 range (large caps) chahiye
+2. **Late entry** → ORB breakout ke 30+ min baad entry = edge khatam
+3. **Volume ignore karna** → Breakout candle pe volume 1.5x+ hona chahiye
+4. **Both sides trade karna** → Daily bias decide karo (gap up = long bias)
+5. **Session end pe trade kholna** → 2:00 PM ke baad new ORB trade avoid
+
+## 💡 Pro Tips
+- Pre-market (9:00-9:15) mein order book depth check karo — buying/selling pressure samjho
+- ORB range + VWAP agar same zone mein hai toh breakout very strong hota hai
+- First 15-min candle body > 70% of range = strong conviction candle
+- Expiry day pe ORB avoid karo — options activity se whipsaws zyada hote hain
+- Nifty/BankNifty ka ORB pehle check karo — index direction individual stock ko follow karta hai

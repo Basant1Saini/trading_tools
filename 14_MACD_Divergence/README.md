@@ -124,3 +124,49 @@ Ye strategy price aur MACD indicator ke beech regular aur hidden divergences det
 - "DIV" diamond markers divergence entry points pe dikhte hain.
 - Regular divergence = reversal; Hidden divergence = continuation.
 - Key S/R levels pe aur extended moves ke baad best kaam karta hai.
+
+---
+
+## 📊 Quick Stats
+
+```
+╔══════════════════════════════════════════════════╗
+║  Difficulty:   🟡 Intermediate                  ║
+║  Risk Level:   Medium                           ║
+║  Timeframe:    1H-4H (best)                    ║
+║  Frequency:    1-3 signals/day                  ║
+║  Hold Time:    Days                             ║
+║  Capital Need: ₹50,000+ (swing trading)         ║
+╚══════════════════════════════════════════════════╝
+```
+
+## ✅ Kab Use Karo / ❌ Kab Avoid Karo
+
+```
+✅ USE KARO:                        ❌ AVOID KARO:
+├── Range-bound market              ├── Strong trending market
+├── Weak trend exhaustion           ├── Breakout days
+├── Divergence clearly visible      ├── Gap opening days
+├── Price at key S/R levels         ├── News-driven momentum
+├── Volume confirmation             ├── Unclear/ambiguous divergence
+└── Auto/manufacturing stocks       └── Penny/illiquid stocks
+```
+
+## 🔗 Best Strategy Combinations
+- **#14 MACD Div + #3 RSI Extremes** → Double divergence = highest conviction reversal
+- **#14 MACD Div + #23 Volume Spike** → Volume spike + MACD divergence = smart money signal
+- **#14 MACD Div + #10 Fibonacci** → Fib level + MACD divergence = precise entry
+
+## ⚠️ Common Mistakes
+1. **Strong trend mein divergence trade** → MACD divergence trending mein fail hota hai
+2. **Hidden vs Regular confuse karna** → Regular = reversal, Hidden = continuation — different trades!
+3. **Maruti mein global auto news ignore** → Global chip shortage, EV news impact karta hai
+4. **Price action ignore karna** → MACD divergence + bearish/bullish candle = then trade
+5. **Too many divergences count karna** → Most recent 2 peaks/troughs compare karo
+
+## 💡 Pro Tips
+- Regular divergence (price new high, MACD lower high) = trend reversal signal
+- Hidden divergence (price higher low, MACD lower low) = trend continuation — different trade!
+- Maruti Suzuki mein monthly sales data (1st week) ke around MACD signals strong hote hain
+- 4H chart pe MACD divergence > 1H — higher TF pe zyada reliable
+- Volume divergence bhi check karo — price up + volume down = bearish divergence confirm
