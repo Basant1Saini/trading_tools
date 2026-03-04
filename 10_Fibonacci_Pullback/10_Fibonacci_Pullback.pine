@@ -1,0 +1,91 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0
+// © TradingTools
+
+//@version=5
+strategy("Fibonacci Pullback Strategy", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=100)
+
+// ─── Inputs ───
+swingLength     = input.int(20, "Swing Detection Length", group="Fibonacci")
+fib382          = input.float(0.382, "Fib 38.2%", group="Fibonacci")
+fib500          = input.float(0.500, "Fib 50.0%", group="Fibonacci")
+fib618          = input.float(0.618, "Fib 61.8%", group="Fibonacci")
+fibBuffer       = input.float(0.5, "Fib Zone Buffer (%)", step=0.1, group="Fibonacci")
+emaTrend        = input.int(50, "Trend EMA Length", group="Filters")
+rsiLength       = input.int(14, "RSI Length", group="Filters")
+rsiOB           = input.float(70, "RSI Overbought", group="Filters")
+rsiOS           = input.float(30, "RSI Oversold", group="Filters")
+atrLength       = input.int(14, "ATR Length", group="Risk Management")
+atrMult         = input.float(2.0, "ATR Multiplier for SL", step=0.1, group="Risk Management")
+rrRatio         = input.float(2.5, "Risk:Reward Ratio", step=0.1, group="Risk Management")
+
+// ─── Swing High/Low Detection ───
+swingHigh = ta.highest(high, swingLength)
+swingLow  = ta.lowest(low, swingLength)
+
+// ─── Fibonacci Levels ───
+range_hl = swingHigh - swingLow
+
+// Uptrend fibs (retracement from high)
+fib382_up = swingHigh - range_hl * fib382
+fib500_up = swingHigh - range_hl * fib500
+fib618_up = swingHigh - range_hl * fib618
+
+// Downtrend fibs (retracement from low)
+fib382_dn = swingLow + range_hl * fib382
+fib500_dn = swingLow + range_hl * fib500
+fib618_dn = swingLow + range_hl * fib618
+
+// ─── Trend & RSI ───
+emaVal  = ta.ema(close, emaTrend)
+rsiVal  = ta.rsi(close, rsiLength)
+atrVal  = ta.atr(atrLength)
+
+bullTrend = close > emaVal
+bearTrend = close < emaVal
+
+// ─── Fib Zone Check ───
+bufferAmt = close * (fibBuffer / 100)
+
+// In uptrend: price pulling back INTO the golden zone (38.2–61.8)
+inBullFibZone = low <= (fib382_up + bufferAmt) and low >= (fib618_up - bufferAmt)
+// In downtrend: price pulling back UP into the golden zone
+inBearFibZone = high >= (fib382_dn - bufferAmt) and high <= (fib618_dn + bufferAmt)
+
+// ─── Entry Conditions ───
+// Long: Uptrend + price in fib pullback zone + bullish candle + RSI not overbought
+bullishCandle  = close > open
+bearishCandle  = close < open
+
+longCondition  = bullTrend and inBullFibZone and bullishCandle and rsiVal < rsiOB and rsiVal > rsiOS
+shortCondition = bearTrend and inBearFibZone and bearishCandle and rsiVal > rsiOS and rsiVal < rsiOB
+
+// ─── Execute Trades ───
+if longCondition and strategy.position_size == 0
+    sl = close - atrVal * atrMult
+    tp = close + (close - sl) * rrRatio
+    strategy.entry("Fib Long", strategy.long)
+    strategy.exit("Fib Long Exit", "Fib Long", stop=sl, limit=tp)
+
+if shortCondition and strategy.position_size == 0
+    sl = close + atrVal * atrMult
+    tp = close - (sl - close) * rrRatio
+    strategy.entry("Fib Short", strategy.short)
+    strategy.exit("Fib Short Exit", "Fib Short", stop=sl, limit=tp)
+
+// ─── Plotting ───
+plot(emaVal, "Trend EMA", color=color.new(color.white, 30), linewidth=2)
+
+plot(bullTrend ? fib382_up : na, "38.2% (Bull)", color=color.new(color.green, 40), style=plot.style_linebr)
+plot(bullTrend ? fib500_up : na, "50.0% (Bull)", color=color.new(color.yellow, 40), style=plot.style_linebr)
+plot(bullTrend ? fib618_up : na, "61.8% (Bull)", color=color.new(color.orange, 40), style=plot.style_linebr)
+
+plot(bearTrend ? fib382_dn : na, "38.2% (Bear)", color=color.new(color.red, 40), style=plot.style_linebr)
+plot(bearTrend ? fib500_dn : na, "50.0% (Bear)", color=color.new(color.yellow, 40), style=plot.style_linebr)
+plot(bearTrend ? fib618_dn : na, "61.8% (Bear)", color=color.new(color.orange, 40), style=plot.style_linebr)
+
+plotshape(longCondition, title="Fib Long", location=location.belowbar, style=shape.arrowup, color=color.green, size=size.small, text="FIB")
+plotshape(shortCondition, title="Fib Short", location=location.abovebar, style=shape.arrowdown, color=color.red, size=size.small, text="FIB")
+
+// ─── Alerts ───
+alertcondition(longCondition, title="Fib Pullback Long", message="Fibonacci: Bullish pullback entry in golden zone")
+alertcondition(shortCondition, title="Fib Pullback Short", message="Fibonacci: Bearish pullback entry in golden zone")

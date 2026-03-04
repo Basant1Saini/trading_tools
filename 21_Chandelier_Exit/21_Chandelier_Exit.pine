@@ -1,0 +1,61 @@
+//@version=5
+strategy("Chandelier Exit", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=10)
+
+// === INPUTS ===
+atrPeriod   = input.int(22, "ATR Period", minval=5)
+atrMult     = input.float(3.0, "ATR Multiplier", step=0.1)
+useClose    = input.bool(true, "Use Close for Extremes", tooltip="Close vs High/Low for ATR anchor")
+emaLen      = input.int(200, "Trend EMA Length", minval=50)
+useTrend    = input.bool(false, "Use EMA Trend Filter")
+slAtrMult   = input.float(1.5, "Initial SL ATR Mult", step=0.1)
+
+// === CALCULATIONS ===
+atr = ta.atr(atrPeriod)
+ema200 = ta.ema(close, emaLen)
+
+// Chandelier Exit levels
+highestHigh = useClose ? ta.highest(close, atrPeriod) : ta.highest(high, atrPeriod)
+lowestLow   = useClose ? ta.lowest(close, atrPeriod) : ta.lowest(low, atrPeriod)
+
+chandelierLong  = highestHigh - atr * atrMult  // Trailing stop for longs
+chandelierShort = lowestLow + atr * atrMult    // Trailing stop for shorts
+
+// Direction
+var int dir = 1
+if close > chandelierShort[1]
+    dir := 1
+if close < chandelierLong[1]
+    dir := -1
+
+longFlip  = dir == 1 and dir[1] == -1
+shortFlip = dir == -1 and dir[1] == 1
+
+trendUp = not useTrend or close > ema200
+trendDn = not useTrend or close < ema200
+
+// === ENTRIES ===
+if longFlip and trendUp
+    sl = close - atr * slAtrMult
+    strategy.entry("ChanL", strategy.long)
+    strategy.exit("ChanLX", "ChanL", stop=sl)
+
+if shortFlip and trendDn
+    sl = close + atr * slAtrMult
+    strategy.entry("ChanS", strategy.short)
+    strategy.exit("ChanSX", "ChanS", stop=sl)
+
+// Dynamic trailing via Chandelier
+if strategy.position_size > 0 and close < chandelierLong
+    strategy.close("ChanL", comment="Chan Exit")
+if strategy.position_size < 0 and close > chandelierShort
+    strategy.close("ChanS", comment="Chan Exit")
+
+// === PLOTS ===
+longLine  = dir == 1 ? chandelierLong : na
+shortLine = dir == -1 ? chandelierShort : na
+plot(longLine, "Chandelier Long", color.green, 2, plot.style_linebr)
+plot(shortLine, "Chandelier Short", color.red, 2, plot.style_linebr)
+plot(useTrend ? ema200 : na, "EMA 200", color.orange, 1)
+plotshape(longFlip, "Long Flip", shape.triangleup, location.belowbar, color.green, text="CHAN↑")
+plotshape(shortFlip, "Short Flip", shape.triangledown, location.abovebar, color.red, text="CHAN↓")
+bgcolor(dir == 1 ? color.new(color.green, 95) : color.new(color.red, 95))

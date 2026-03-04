@@ -1,0 +1,88 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0
+// © TradingTools
+
+//@version=5
+strategy("London Breakout - Session Strategy", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=100)
+
+// ─── Inputs ───
+asianSession    = input.session("0000-0700", "Asian Range Session (UTC)", group="Sessions")
+londonSession   = input.session("0700-1100", "London Trading Window (UTC)", group="Sessions")
+closeSession    = input.session("1100-1600", "Close Window (UTC)", group="Sessions")
+bufferPips      = input.float(5, "Breakout Buffer (pips)", step=1, group="Entry")
+pipValue        = input.float(0.0001, "Pip Value", step=0.0001, group="Entry", tooltip="0.0001 for most pairs, 0.01 for JPY")
+atrLength       = input.int(14, "ATR Length", group="Risk Management")
+atrMult         = input.float(1.5, "ATR Multiplier for SL", step=0.1, group="Risk Management")
+rrRatio         = input.float(2.0, "Risk:Reward Ratio", step=0.1, group="Risk Management")
+maxTrades       = input.int(1, "Max Trades Per Day", group="Risk Management")
+showBox         = input.bool(true, "Show Asian Range Box", group="Display")
+
+// ─── Session Detection ───
+isAsian  = not na(time(timeframe.period, asianSession))
+isLondon = not na(time(timeframe.period, londonSession))
+isClose  = not na(time(timeframe.period, closeSession))
+
+// ─── Asian Range ───
+var float asianHigh = na
+var float asianLow  = na
+var bool  rangeSet  = false
+var int   dailyTrades = 0
+
+// Reset at start of Asian session
+if isAsian and not isAsian[1]
+    asianHigh := high
+    asianLow  := low
+    rangeSet  := false
+    dailyTrades := 0
+
+// Build range during Asian session
+if isAsian
+    asianHigh := math.max(asianHigh, high)
+    asianLow  := math.min(asianLow, low)
+
+// Lock range at end of Asian session
+if not isAsian and isAsian[1]
+    rangeSet := true
+
+// ─── Buffer ───
+buffer = bufferPips * pipValue
+
+// ─── ATR ───
+atrVal = ta.atr(atrLength)
+
+// ─── Entry Conditions ───
+longCondition  = rangeSet and isLondon and close > (asianHigh + buffer) and dailyTrades < maxTrades
+shortCondition = rangeSet and isLondon and close < (asianLow - buffer) and dailyTrades < maxTrades
+
+// ─── Execute Trades ───
+if longCondition and strategy.position_size == 0
+    sl = close - atrVal * atrMult
+    tp = close + (close - sl) * rrRatio
+    strategy.entry("London Long", strategy.long)
+    strategy.exit("London Long Exit", "London Long", stop=sl, limit=tp)
+    dailyTrades += 1
+
+if shortCondition and strategy.position_size == 0
+    sl = close + atrVal * atrMult
+    tp = close - (sl - close) * rrRatio
+    strategy.entry("London Short", strategy.short)
+    strategy.exit("London Short Exit", "London Short", stop=sl, limit=tp)
+    dailyTrades += 1
+
+// ─── Close at End of Window ───
+if not isLondon and not isClose and strategy.position_size != 0
+    strategy.close_all("Window Closed")
+
+// ─── Plotting ───
+asianHighLine = plot(showBox and rangeSet and (isLondon or isClose) ? asianHigh : na, "Asian High", color=color.new(color.teal, 0), linewidth=2, style=plot.style_linebr)
+asianLowLine  = plot(showBox and rangeSet and (isLondon or isClose) ? asianLow : na, "Asian Low", color=color.new(color.teal, 0), linewidth=2, style=plot.style_linebr)
+fill(asianHighLine, asianLowLine, color=color.new(color.teal, 88), title="Asian Range")
+
+bgcolor(isAsian ? color.new(color.purple, 95) : isLondon ? color.new(color.yellow, 95) : na, title="Session Highlight")
+
+plotshape(longCondition and strategy.position_size[1] == 0, title="London Long", location=location.belowbar, style=shape.arrowup, color=color.green, size=size.small, text="LDN")
+plotshape(shortCondition and strategy.position_size[1] == 0, title="London Short", location=location.abovebar, style=shape.arrowdown, color=color.red, size=size.small, text="LDN")
+
+// ─── Alerts ───
+alertcondition(longCondition, title="London Long Breakout", message="London Breakout: Price broke above Asian range — Long")
+alertcondition(shortCondition, title="London Short Breakout", message="London Breakout: Price broke below Asian range — Short")
+alertcondition(rangeSet and not rangeSet[1], title="Asian Range Set", message="London Breakout: Asian range established")

@@ -1,0 +1,67 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0
+// © TradingTools
+
+//@version=5
+strategy("MTF - Multi-Time Frame Strategy", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=100)
+
+// ─── Inputs ───
+htfPeriod       = input.timeframe("D", "Higher Timeframe", group="MTF Settings")
+fastMA          = input.int(9, "Fast MA Length", group="Moving Averages")
+slowMA          = input.int(21, "Slow MA Length", group="Moving Averages")
+htfMA           = input.int(50, "HTF Trend MA Length", group="Moving Averages")
+maType          = input.string("EMA", "MA Type", options=["EMA", "SMA"], group="Moving Averages")
+useAtrSL        = input.bool(true, "Use ATR Stop Loss", group="Risk Management")
+atrLength       = input.int(14, "ATR Length", group="Risk Management")
+atrMult         = input.float(2.0, "ATR Multiplier", step=0.1, group="Risk Management")
+rrRatio         = input.float(2.0, "Risk:Reward Ratio", step=0.1, group="Risk Management")
+
+// ─── MA Calculation Function ───
+maCalc(src, len, typ) =>
+    typ == "EMA" ? ta.ema(src, len) : ta.sma(src, len)
+
+// ─── Current Timeframe MAs ───
+fastLine = maCalc(close, fastMA, maType)
+slowLine = maCalc(close, slowMA, maType)
+
+// ─── Higher Timeframe Trend ───
+htfClose    = request.security(syminfo.tickerid, htfPeriod, close)
+htfTrendMA  = request.security(syminfo.tickerid, htfPeriod, maCalc(close, htfMA, maType))
+htfBullish  = htfClose > htfTrendMA
+htfBearish  = htfClose < htfTrendMA
+
+// ─── ATR ───
+atrVal = ta.atr(atrLength)
+
+// ─── Entry Conditions ───
+// Long:  HTF bullish + fast crosses above slow on current TF
+// Short: HTF bearish + fast crosses below slow on current TF
+longCondition  = htfBullish and ta.crossover(fastLine, slowLine)
+shortCondition = htfBearish and ta.crossunder(fastLine, slowLine)
+
+// ─── Execute Trades ───
+if longCondition and strategy.position_size == 0
+    sl = useAtrSL ? close - atrVal * atrMult : slowLine
+    tp = close + (close - sl) * rrRatio
+    strategy.entry("MTF Long", strategy.long)
+    strategy.exit("MTF Long Exit", "MTF Long", stop=sl, limit=tp)
+
+if shortCondition and strategy.position_size == 0
+    sl = useAtrSL ? close + atrVal * atrMult : slowLine
+    tp = close - (sl - close) * rrRatio
+    strategy.entry("MTF Short", strategy.short)
+    strategy.exit("MTF Short Exit", "MTF Short", stop=sl, limit=tp)
+
+// ─── Plotting ───
+plot(fastLine, "Fast MA", color=color.new(color.teal, 0), linewidth=2)
+plot(slowLine, "Slow MA", color=color.new(color.orange, 0), linewidth=2)
+
+// HTF Trend Background
+bgcolor(htfBullish ? color.new(color.green, 92) : htfBearish ? color.new(color.red, 92) : na, title="HTF Trend")
+
+// Entry markers
+plotshape(longCondition, title="Long Signal", location=location.belowbar, style=shape.triangleup, color=color.green, size=size.small)
+plotshape(shortCondition, title="Short Signal", location=location.abovebar, style=shape.triangledown, color=color.red, size=size.small)
+
+// ─── Alerts ───
+alertcondition(longCondition, title="MTF Long Entry", message="MTF: Bullish HTF + Fast MA crossed above Slow MA")
+alertcondition(shortCondition, title="MTF Short Entry", message="MTF: Bearish HTF + Fast MA crossed below Slow MA")

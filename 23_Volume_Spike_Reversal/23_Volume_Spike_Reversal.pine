@@ -1,0 +1,61 @@
+//@version=5
+strategy("Volume Spike Reversal", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=10)
+
+// === INPUTS ===
+volLen      = input.int(20, "Volume MA Length", minval=5)
+volSpike    = input.float(2.5, "Volume Spike Multiplier", step=0.1, tooltip="How many times avg volume = spike")
+rsiLen      = input.int(14, "RSI Length")
+rsiOB       = input.float(70, "RSI Overbought", step=5)
+rsiOS       = input.float(30, "RSI Oversold", step=5)
+useRSI      = input.bool(true, "Use RSI Extreme Filter")
+candleType  = input.string("Reversal Candle", "Candle Confirmation", options=["Reversal Candle", "Any Close", "None"])
+atrLen      = input.int(14, "ATR Length")
+atrMult     = input.float(2.0, "ATR Multiplier (SL)", step=0.1)
+rrRatio     = input.float(2.5, "Risk:Reward", step=0.1)
+
+// === CALCULATIONS ===
+avgVol  = ta.sma(volume, volLen)
+isSpike = volume >= avgVol * volSpike
+rsi     = ta.rsi(close, rsiLen)
+atr     = ta.atr(atrLen)
+
+// Reversal candle patterns
+bullReversal = close > open and close > (high + low) / 2  // Bullish close in upper half
+bearReversal = close < open and close < (high + low) / 2  // Bearish close in lower half
+
+// Hammer-like (long lower wick)
+hammer = (close > open) and ((open - low) > 2 * (close - open)) and ((high - close) < (close - open))
+// Shooting star (long upper wick)
+shootingStar = (close < open) and ((high - open) > 2 * (open - close)) and ((close - low) < (open - close))
+
+bullCandle = candleType == "None" or (candleType == "Reversal Candle" ? (bullReversal or hammer) : close > open)
+bearCandle = candleType == "None" or (candleType == "Reversal Candle" ? (bearReversal or shootingStar) : close < open)
+
+rsiOversold  = not useRSI or rsi < rsiOS
+rsiOverbought = not useRSI or rsi > rsiOB
+
+// === SIGNALS ===
+// Bullish: Volume spike + price was falling + RSI oversold + bullish reversal candle
+longSignal  = isSpike and rsiOversold and bullCandle and close < ta.sma(close, 20)
+// Bearish: Volume spike + price was rising + RSI overbought + bearish reversal candle
+shortSignal = isSpike and rsiOverbought and bearCandle and close > ta.sma(close, 20)
+
+// === ENTRIES ===
+if longSignal and strategy.position_size == 0
+    sl = close - atr * atrMult
+    tp = close + (close - sl) * rrRatio
+    strategy.entry("VolRevL", strategy.long)
+    strategy.exit("VolRevLX", "VolRevL", stop=sl, limit=tp)
+
+if shortSignal and strategy.position_size == 0
+    sl = close + atr * atrMult
+    tp = close - (sl - close) * rrRatio
+    strategy.entry("VolRevS", strategy.short)
+    strategy.exit("VolRevSX", "VolRevS", stop=sl, limit=tp)
+
+// === PLOTS ===
+plot(ta.sma(close, 20), "SMA 20", color.orange, 1)
+bgcolor(isSpike ? color.new(color.yellow, 85) : na)
+plotshape(longSignal, "Vol Rev Long", shape.labelup, location.belowbar, color.new(color.green, 0), text="VOL↑", textcolor=color.white)
+plotshape(shortSignal, "Vol Rev Short", shape.labeldown, location.abovebar, color.new(color.red, 0), text="VOL↓", textcolor=color.white)
+plotshape(isSpike and not longSignal and not shortSignal, "Spike Only", shape.diamond, location.abovebar, color.new(color.yellow, 30), size=size.tiny)

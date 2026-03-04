@@ -1,0 +1,78 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0
+// © TradingTools
+
+//@version=5
+strategy("RSI Extremes - Mean Reversion", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=100)
+
+// ─── Inputs ───
+rsiLength       = input.int(14, "RSI Length", group="RSI Settings")
+rsiOverbought   = input.float(75, "Overbought Level", minval=50, maxval=95, group="RSI Settings")
+rsiOversold     = input.float(25, "Oversold Level", minval=5, maxval=50, group="RSI Settings")
+rsiExtremeOB    = input.float(85, "Extreme Overbought", minval=70, maxval=99, group="RSI Settings")
+rsiExtremeOS    = input.float(15, "Extreme Oversold", minval=1, maxval=30, group="RSI Settings")
+useDivergence   = input.bool(true, "Use RSI Divergence Confirmation", group="RSI Settings")
+maLength        = input.int(200, "Trend Filter MA Length", group="Filters")
+useTrendFilter  = input.bool(true, "Use Trend Filter (MA)", group="Filters")
+atrLength       = input.int(14, "ATR Length", group="Risk Management")
+atrMult         = input.float(2.0, "ATR Multiplier for SL", step=0.1, group="Risk Management")
+rrRatio         = input.float(2.0, "Risk:Reward Ratio", step=0.1, group="Risk Management")
+
+// ─── Calculations ───
+rsiVal  = ta.rsi(close, rsiLength)
+trendMA = ta.sma(close, maLength)
+atrVal  = ta.atr(atrLength)
+
+// ─── Divergence Detection ───
+// Bullish divergence: price makes lower low but RSI makes higher low
+priceLowerLow   = low < ta.lowest(low, 5)[1]
+rsiHigherLow    = rsiVal > ta.valuewhen(priceLowerLow[1], rsiVal, 0)
+bullDivergence  = priceLowerLow and rsiHigherLow and rsiVal < rsiOversold
+
+// Bearish divergence: price makes higher high but RSI makes lower high
+priceHigherHigh = high > ta.highest(high, 5)[1]
+rsiLowerHigh    = rsiVal < ta.valuewhen(priceHigherHigh[1], rsiVal, 0)
+bearDivergence  = priceHigherHigh and rsiLowerHigh and rsiVal > rsiOverbought
+
+// ─── Entry Conditions ───
+// Standard: RSI crosses back from extreme + optional trend filter + optional divergence
+trendBullOK = useTrendFilter ? close > trendMA : true
+trendBearOK = useTrendFilter ? close < trendMA : true
+
+// RSI crossing back from oversold zone (mean reversion long)
+rsiLongSignal  = ta.crossover(rsiVal, rsiOversold) or (rsiVal[1] <= rsiExtremeOS and rsiVal > rsiExtremeOS)
+rsiShortSignal = ta.crossunder(rsiVal, rsiOverbought) or (rsiVal[1] >= rsiExtremeOB and rsiVal < rsiExtremeOB)
+
+longCondition  = rsiLongSignal and (useDivergence ? bullDivergence or rsiVal[1] <= rsiExtremeOS : true)
+shortCondition = rsiShortSignal and (useDivergence ? bearDivergence or rsiVal[1] >= rsiExtremeOB : true)
+
+// ─── Execute Trades ───
+if longCondition and strategy.position_size == 0
+    sl = close - atrVal * atrMult
+    tp = close + (close - sl) * rrRatio
+    strategy.entry("RSI Long", strategy.long)
+    strategy.exit("RSI Long Exit", "RSI Long", stop=sl, limit=tp)
+
+if shortCondition and strategy.position_size == 0
+    sl = close + atrVal * atrMult
+    tp = close - (sl - close) * rrRatio
+    strategy.entry("RSI Short", strategy.short)
+    strategy.exit("RSI Short Exit", "RSI Short", stop=sl, limit=tp)
+
+// ─── RSI Panel ───
+var rsiPanel = "RSI Panel"
+hline(rsiOverbought, "Overbought", color=color.red, linestyle=hline.style_dashed, display=display.none)
+hline(rsiOversold, "Oversold", color=color.green, linestyle=hline.style_dashed, display=display.none)
+hline(50, "Midline", color=color.gray, linestyle=hline.style_dotted, display=display.none)
+
+// ─── Overlay Plotting ───
+plot(useTrendFilter ? trendMA : na, "Trend MA", color=color.new(color.gray, 30), linewidth=2)
+
+plotshape(longCondition, title="Long Signal", location=location.belowbar, style=shape.diamond, color=color.green, size=size.small, text="RSI")
+plotshape(shortCondition, title="Short Signal", location=location.abovebar, style=shape.diamond, color=color.red, size=size.small, text="RSI")
+
+// ─── Background on Extreme RSI ───
+bgcolor(rsiVal >= rsiExtremeOB ? color.new(color.red, 85) : rsiVal <= rsiExtremeOS ? color.new(color.green, 85) : na, title="Extreme RSI Zone")
+
+// ─── Alerts ───
+alertcondition(longCondition, title="RSI Extreme Long", message="RSI Extremes: Oversold reversal detected — Long entry")
+alertcondition(shortCondition, title="RSI Extreme Short", message="RSI Extremes: Overbought reversal detected — Short entry")

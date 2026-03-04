@@ -1,0 +1,79 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0
+// © TradingTools
+
+//@version=5
+strategy("Scalper - Quick Strike", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=100)
+
+// ─── Inputs ───
+emaFast         = input.int(5, "Fast EMA", group="EMAs")
+emaMed          = input.int(13, "Medium EMA", group="EMAs")
+emaSlow         = input.int(34, "Slow EMA", group="EMAs")
+stochK          = input.int(14, "Stochastic K", group="Stochastic")
+stochD          = input.int(3, "Stochastic D", group="Stochastic")
+stochSmooth     = input.int(3, "Stochastic Smooth", group="Stochastic")
+stochOB         = input.float(80, "Stoch Overbought", group="Stochastic")
+stochOS         = input.float(20, "Stoch Oversold", group="Stochastic")
+atrLength       = input.int(10, "ATR Length", group="Risk Management")
+atrMult         = input.float(1.0, "ATR Multiplier for SL", step=0.1, group="Risk Management")
+rrRatio         = input.float(1.5, "Risk:Reward Ratio", step=0.1, group="Risk Management")
+maxTrades       = input.int(10, "Max Trades Per Day", group="Risk Management")
+sessionFilter   = input.session("0935-1555", "Trading Session", group="Session")
+
+// ─── Calculations ───
+fast    = ta.ema(close, emaFast)
+med     = ta.ema(close, emaMed)
+slow    = ta.ema(close, emaSlow)
+atrVal  = ta.atr(atrLength)
+
+k       = ta.stoch(close, high, low, stochK)
+d       = ta.sma(k, stochD)
+kSmooth = ta.sma(k, stochSmooth)
+
+// ─── Session ───
+inSession = not na(time(timeframe.period, sessionFilter))
+
+// ─── Trade Count (reset daily) ───
+var int tradeCount = 0
+if dayofweek != dayofweek[1]
+    tradeCount := 0
+
+// ─── EMA Alignment ───
+bullAlign = fast > med and med > slow
+bearAlign = fast < med and med < slow
+
+// ─── Entry Conditions ───
+// Long: EMA aligned bull + Stochastic crossing up from oversold
+// Short: EMA aligned bear + Stochastic crossing down from overbought
+longCondition  = bullAlign and ta.crossover(kSmooth, d) and kSmooth < stochOS + 30 and close > fast and inSession
+shortCondition = bearAlign and ta.crossunder(kSmooth, d) and kSmooth > stochOB - 30 and close < fast and inSession
+
+// ─── Execute Trades ───
+if longCondition and strategy.position_size == 0 and tradeCount < maxTrades
+    sl = close - atrVal * atrMult
+    tp = close + (close - sl) * rrRatio
+    strategy.entry("Scalp Long", strategy.long)
+    strategy.exit("Scalp Long Exit", "Scalp Long", stop=sl, limit=tp)
+    tradeCount += 1
+
+if shortCondition and strategy.position_size == 0 and tradeCount < maxTrades
+    sl = close + atrVal * atrMult
+    tp = close - (sl - close) * rrRatio
+    strategy.entry("Scalp Short", strategy.short)
+    strategy.exit("Scalp Short Exit", "Scalp Short", stop=sl, limit=tp)
+    tradeCount += 1
+
+// ─── Time-based Exit (quick) ───
+if not inSession and strategy.position_size != 0
+    strategy.close_all("Session End")
+
+// ─── Plotting ───
+plot(fast, "Fast EMA", color=color.new(color.lime, 0), linewidth=1)
+plot(med, "Med EMA", color=color.new(color.orange, 0), linewidth=1)
+plot(slow, "Slow EMA", color=color.new(color.red, 0), linewidth=2)
+
+plotshape(longCondition, title="Scalp Long", location=location.belowbar, style=shape.triangleup, color=color.lime, size=size.tiny)
+plotshape(shortCondition, title="Scalp Short", location=location.abovebar, style=shape.triangledown, color=color.fuchsia, size=size.tiny)
+
+// ─── Alerts ───
+alertcondition(longCondition, title="Scalp Long", message="Scalper: Quick long entry")
+alertcondition(shortCondition, title="Scalp Short", message="Scalper: Quick short entry")

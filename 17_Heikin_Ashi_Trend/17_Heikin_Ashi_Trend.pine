@@ -1,0 +1,72 @@
+//@version=5
+strategy("Heikin Ashi Trend", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=10)
+
+// === INPUTS ===
+emaFastLen  = input.int(9, "Fast EMA", minval=3)
+emaSlowLen  = input.int(21, "Slow EMA", minval=5)
+emaTrendLen = input.int(50, "Trend EMA", minval=10)
+useTrendFilter = input.bool(true, "Use Trend EMA Filter")
+consecutiveBars = input.int(2, "Min Consecutive HA Bars", minval=1, maxval=5)
+atrLen      = input.int(14, "ATR Length")
+atrMult     = input.float(2.0, "ATR Multiplier (SL)", step=0.1)
+trailATR    = input.float(2.5, "Trailing ATR Multiplier", step=0.1)
+
+// === HEIKIN ASHI CALCULATIONS ===
+haClose = (open + high + low + close) / 4
+var float haOpen = na
+haOpen := na(haOpen[1]) ? (open + close) / 2 : (nz(haOpen[1]) + nz(haClose[1])) / 2
+haHigh  = math.max(high, math.max(haOpen, haClose))
+haLow   = math.min(low, math.min(haOpen, haClose))
+
+haBullish = haClose > haOpen
+haBearish = haClose < haOpen
+
+// Strong HA candles (no lower wick for bull, no upper wick for bear)
+haStrongBull = haBullish and haLow == math.min(haOpen, haClose)
+haStrongBear = haBearish and haHigh == math.max(haOpen, haClose)
+
+// Consecutive count
+var int bullCount = 0
+var int bearCount = 0
+bullCount := haBullish ? bullCount + 1 : 0
+bearCount := haBearish ? bearCount + 1 : 0
+
+// === EMAs ===
+emaFast  = ta.ema(close, emaFastLen)
+emaSlow  = ta.ema(close, emaSlowLen)
+emaTrend = ta.ema(close, emaTrendLen)
+atr      = ta.atr(atrLen)
+
+bullEMA = emaFast > emaSlow
+bearEMA = emaFast < emaSlow
+trendUp = not useTrendFilter or close > emaTrend
+trendDn = not useTrendFilter or close < emaTrend
+
+// === SIGNALS ===
+longSignal  = bullCount >= consecutiveBars and bullEMA and trendUp and bullCount[1] < consecutiveBars
+shortSignal = bearCount >= consecutiveBars and bearEMA and trendDn and bearCount[1] < consecutiveBars
+
+// === ENTRIES ===
+if longSignal and strategy.position_size <= 0
+    sl = close - atr * atrMult
+    strategy.entry("HALong", strategy.long)
+    strategy.exit("HALongX", "HALong", stop=sl, trail_offset=atr * trailATR, trail_points=atr * trailATR)
+
+if shortSignal and strategy.position_size >= 0
+    sl = close + atr * atrMult
+    strategy.entry("HAShort", strategy.short)
+    strategy.exit("HAShortX", "HAShort", stop=sl, trail_offset=atr * trailATR, trail_points=atr * trailATR)
+
+// Exit on HA color change
+if strategy.position_size > 0 and haBearish
+    strategy.close("HALong", comment="HA Flip")
+if strategy.position_size < 0 and haBullish
+    strategy.close("HAShort", comment="HA Flip")
+
+// === PLOTS ===
+plot(emaFast, "Fast EMA", color.green, 1)
+plot(emaSlow, "Slow EMA", color.red, 1)
+plot(emaTrend, "Trend EMA", color.orange, 2)
+barcolor(haBullish ? color.green : color.red)
+plotshape(longSignal, "HA Long", shape.triangleup, location.belowbar, color.green, text="HA↑")
+plotshape(shortSignal, "HA Short", shape.triangledown, location.abovebar, color.red, text="HA↓")

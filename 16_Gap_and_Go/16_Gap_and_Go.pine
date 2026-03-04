@@ -1,0 +1,63 @@
+//@version=5
+strategy("Gap and Go", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=10)
+
+// === INPUTS ===
+minGapPct       = input.float(0.5, "Min Gap %", step=0.1, tooltip="Minimum gap size to consider")
+maxGapPct       = input.float(5.0, "Max Gap %", step=0.5, tooltip="Maximum gap (avoid extreme gaps)")
+gapFillAvoid    = input.bool(true, "Avoid Gap Fill Direction", tooltip="Don't trade if gap likely to fill")
+emaLen          = input.int(20, "Trend EMA Length", minval=5)
+volMultiplier   = input.float(1.5, "Volume Multiplier", step=0.1, tooltip="Min volume vs 20-bar avg")
+atrLen          = input.int(14, "ATR Length")
+atrMult         = input.float(1.5, "ATR Multiplier (SL)", step=0.1)
+rrRatio         = input.float(2.0, "Risk:Reward", step=0.1)
+entryBars       = input.int(3, "Entry Window (bars after open)", minval=1, maxval=10)
+sessionStart    = input.session("0915-0945", "Entry Session Window")
+
+// === CALCULATIONS ===
+prevClose   = request.security(syminfo.tickerid, "D", close[1], barmerge.gaps_off, barmerge.lookahead_on)
+todayOpen   = request.security(syminfo.tickerid, "D", open, barmerge.gaps_off, barmerge.lookahead_on)
+gapPct      = ((todayOpen - prevClose) / prevClose) * 100
+gapUp       = gapPct >= minGapPct and gapPct <= maxGapPct
+gapDown     = gapPct <= -minGapPct and gapPct >= -maxGapPct
+
+ema         = ta.ema(close, emaLen)
+atr         = ta.atr(atrLen)
+avgVol      = ta.sma(volume, 20)
+highVol     = volume >= avgVol * volMultiplier
+
+inSession   = not na(time(timeframe.period, sessionStart))
+
+// Bar count since session start
+var int barCount = 0
+if ta.change(time("D"))
+    barCount := 0
+barCount += 1
+
+inEntryWindow = barCount <= entryBars
+
+// === SIGNALS ===
+longSignal  = gapUp and close > todayOpen and close > ema and highVol and inSession and inEntryWindow
+shortSignal = gapDown and close < todayOpen and close < ema and highVol and inSession and inEntryWindow
+
+if gapFillAvoid
+    longSignal  := longSignal and close > prevClose
+    shortSignal := shortSignal and close < prevClose
+
+// === ENTRIES ===
+if longSignal and strategy.position_size == 0
+    sl = close - atr * atrMult
+    tp = close + (close - sl) * rrRatio
+    strategy.entry("GapLong", strategy.long)
+    strategy.exit("GapLongX", "GapLong", stop=sl, limit=tp)
+
+if shortSignal and strategy.position_size == 0
+    sl = close + atr * atrMult
+    tp = close - (sl - close) * rrRatio
+    strategy.entry("GapShort", strategy.short)
+    strategy.exit("GapShortX", "GapShort", stop=sl, limit=tp)
+
+// === PLOTS ===
+plotshape(longSignal, "Gap Up Go", shape.labelup, location.belowbar, color.new(color.green, 0), text="GAP↑", textcolor=color.white)
+plotshape(shortSignal, "Gap Down Go", shape.labeldown, location.abovebar, color.new(color.red, 0), text="GAP↓", textcolor=color.white)
+plot(ema, "EMA", color.orange, 2)
+bgcolor(gapUp and inEntryWindow ? color.new(color.green, 90) : gapDown and inEntryWindow ? color.new(color.red, 90) : na)

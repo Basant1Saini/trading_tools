@@ -1,0 +1,91 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0
+// © TradingTools
+
+//@version=5
+strategy("Ichimoku Cloud Strategy", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=100)
+
+// ─── Inputs ───
+tenkanLen       = input.int(9, "Tenkan-Sen (Conversion)", group="Ichimoku")
+kijunLen        = input.int(26, "Kijun-Sen (Base)", group="Ichimoku")
+senkouBLen      = input.int(52, "Senkou Span B", group="Ichimoku")
+displacement    = input.int(26, "Cloud Displacement", group="Ichimoku")
+useTKCross      = input.bool(true, "Use TK Cross Entry", group="Entry Mode")
+useCloudBreak   = input.bool(true, "Use Cloud Breakout Entry", group="Entry Mode")
+useChikouConf   = input.bool(true, "Require Chikou Confirmation", group="Filters")
+atrLength       = input.int(14, "ATR Length", group="Risk Management")
+atrMult         = input.float(2.0, "ATR Multiplier for SL", step=0.1, group="Risk Management")
+trailAtrMult    = input.float(3.0, "Trailing Stop ATR Mult", step=0.1, group="Risk Management")
+
+// ─── Ichimoku Components ───
+tenkan  = (ta.highest(high, tenkanLen) + ta.lowest(low, tenkanLen)) / 2
+kijun   = (ta.highest(high, kijunLen) + ta.lowest(low, kijunLen)) / 2
+senkouA = (tenkan + kijun) / 2
+senkouB = (ta.highest(high, senkouBLen) + ta.lowest(low, senkouBLen)) / 2
+
+// Current cloud (for position relative to cloud)
+cloudTop    = math.max(senkouA[displacement], senkouB[displacement])
+cloudBottom = math.min(senkouA[displacement], senkouB[displacement])
+
+// Chikou Span (close plotted 26 bars back — compare current close to price 26 bars ago)
+chikouBull = close > close[displacement]
+chikouBear = close < close[displacement]
+
+// ─── ATR ───
+atrVal = ta.atr(atrLength)
+
+// ─── Conditions ───
+aboveCloud = close > cloudTop
+belowCloud = close < cloudBottom
+
+tkCrossLong  = ta.crossover(tenkan, kijun)
+tkCrossShort = ta.crossunder(tenkan, kijun)
+
+cloudBreakLong  = ta.crossover(close, cloudTop)
+cloudBreakShort = ta.crossunder(close, cloudBottom)
+
+chikouOK_long  = useChikouConf ? chikouBull : true
+chikouOK_short = useChikouConf ? chikouBear : true
+
+// ─── Entry ───
+longTK    = useTKCross and tkCrossLong and aboveCloud and chikouOK_long
+longCloud = useCloudBreak and cloudBreakLong and tenkan > kijun and chikouOK_long
+
+shortTK    = useTKCross and tkCrossShort and belowCloud and chikouOK_short
+shortCloud = useCloudBreak and cloudBreakShort and tenkan < kijun and chikouOK_short
+
+longCondition  = longTK or longCloud
+shortCondition = shortTK or shortCloud
+
+// ─── Execute Trades ───
+if longCondition and strategy.position_size <= 0
+    sl = close - atrVal * atrMult
+    strategy.entry("Ichi Long", strategy.long)
+    strategy.exit("Ichi Long Exit", "Ichi Long", stop=sl, trail_offset=atrVal * trailAtrMult, trail_points=atrVal * trailAtrMult)
+
+if shortCondition and strategy.position_size >= 0
+    sl = close + atrVal * atrMult
+    strategy.entry("Ichi Short", strategy.short)
+    strategy.exit("Ichi Short Exit", "Ichi Short", stop=sl, trail_offset=atrVal * trailAtrMult, trail_points=atrVal * trailAtrMult)
+
+// ─── Exit on Opposite TK Cross ───
+if strategy.position_size > 0 and tkCrossShort
+    strategy.close("Ichi Long", comment="TK Cross Exit")
+if strategy.position_size < 0 and tkCrossLong
+    strategy.close("Ichi Short", comment="TK Cross Exit")
+
+// ─── Plotting ───
+plot(tenkan, "Tenkan-Sen", color=color.new(color.blue, 0), linewidth=1)
+plot(kijun, "Kijun-Sen", color=color.new(color.red, 0), linewidth=1)
+
+senkouAPlot = plot(senkouA, "Senkou A", offset=displacement, color=color.new(color.green, 0))
+senkouBPlot = plot(senkouB, "Senkou B", offset=displacement, color=color.new(color.red, 0))
+fill(senkouAPlot, senkouBPlot, color=senkouA > senkouB ? color.new(color.green, 85) : color.new(color.red, 85), title="Cloud")
+
+plot(close, "Chikou Span", offset=-displacement, color=color.new(color.purple, 20), linewidth=1)
+
+plotshape(longCondition, title="Long", location=location.belowbar, style=shape.triangleup, color=color.green, size=size.small)
+plotshape(shortCondition, title="Short", location=location.abovebar, style=shape.triangledown, color=color.red, size=size.small)
+
+// ─── Alerts ───
+alertcondition(longCondition, title="Ichimoku Long", message="Ichimoku: Bullish signal — Long entry")
+alertcondition(shortCondition, title="Ichimoku Short", message="Ichimoku: Bearish signal — Short entry")

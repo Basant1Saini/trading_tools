@@ -1,0 +1,90 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0
+// © TradingTools
+
+//@version=5
+strategy("Slow & Steady - Swing Strategy", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=100)
+
+// ─── Inputs ───
+ema50Len        = input.int(50, "EMA 50 Length", group="Moving Averages")
+ema100Len       = input.int(100, "EMA 100 Length", group="Moving Averages")
+ema200Len       = input.int(200, "EMA 200 Length", group="Moving Averages")
+macdFast        = input.int(12, "MACD Fast", group="MACD")
+macdSlow        = input.int(26, "MACD Slow", group="MACD")
+macdSignal      = input.int(9, "MACD Signal", group="MACD")
+adxLength       = input.int(14, "ADX Length", group="ADX Filter")
+adxSmoothing    = input.int(14, "ADX Smoothing", group="ADX Filter")
+adxThreshold    = input.float(20, "ADX Threshold", group="ADX Filter")
+useAdxFilter    = input.bool(true, "Use ADX Filter", group="ADX Filter")
+atrLength       = input.int(14, "ATR Length", group="Risk Management")
+atrMult         = input.float(2.5, "ATR Multiplier for SL", step=0.1, group="Risk Management")
+trailAtrMult    = input.float(3.0, "Trailing Stop ATR Mult", step=0.1, group="Risk Management")
+useTrailStop    = input.bool(true, "Use Trailing Stop", group="Risk Management")
+
+// ─── Calculations ───
+ema50   = ta.ema(close, ema50Len)
+ema100  = ta.ema(close, ema100Len)
+ema200  = ta.ema(close, ema200Len)
+
+[macdLine, signalLine, hist] = ta.macd(close, macdFast, macdSlow, macdSignal)
+
+atrVal = ta.atr(atrLength)
+
+// ─── ADX Calculation ───
+[diPlus, diMinus, adxVal] = ta.dmi(adxLength, adxSmoothing)
+adxOK = useAdxFilter ? adxVal >= adxThreshold : true
+
+// ─── Trend Alignment ───
+// Bullish: EMA 50 > EMA 100 > EMA 200 (all aligned upward)
+// Bearish: EMA 50 < EMA 100 < EMA 200 (all aligned downward)
+bullTrend = ema50 > ema100 and ema100 > ema200
+bearTrend = ema50 < ema100 and ema100 < ema200
+
+// ─── Entry Conditions ───
+// Long:  Aligned bull trend + MACD crosses above signal + ADX confirms strength
+// Short: Aligned bear trend + MACD crosses below signal + ADX confirms strength
+longCondition  = bullTrend and ta.crossover(macdLine, signalLine) and adxOK and close > ema50
+shortCondition = bearTrend and ta.crossunder(macdLine, signalLine) and adxOK and close < ema50
+
+// ─── Pullback Entry (price touches EMA 50 in a trend) ───
+pullbackLong  = bullTrend and low <= ema50 and close > ema50 and macdLine > signalLine and adxOK
+pullbackShort = bearTrend and high >= ema50 and close < ema50 and macdLine < signalLine and adxOK
+
+// ─── Execute Trades ───
+if (longCondition or pullbackLong) and strategy.position_size == 0
+    sl = close - atrVal * atrMult
+    strategy.entry("Steady Long", strategy.long)
+    if useTrailStop
+        strategy.exit("Steady Long Exit", "Steady Long", stop=sl, trail_offset=atrVal * trailAtrMult, trail_points=atrVal * trailAtrMult)
+    else
+        strategy.exit("Steady Long Exit", "Steady Long", stop=sl)
+
+if (shortCondition or pullbackShort) and strategy.position_size == 0
+    sl = close + atrVal * atrMult
+    strategy.entry("Steady Short", strategy.short)
+    if useTrailStop
+        strategy.exit("Steady Short Exit", "Steady Short", stop=sl, trail_offset=atrVal * trailAtrMult, trail_points=atrVal * trailAtrMult)
+    else
+        strategy.exit("Steady Short Exit", "Steady Short", stop=sl)
+
+// ─── Exit on Trend Break ───
+if strategy.position_size > 0 and (ema50 < ema100 or close < ema200)
+    strategy.close("Steady Long", comment="Trend Break")
+if strategy.position_size < 0 and (ema50 > ema100 or close > ema200)
+    strategy.close("Steady Short", comment="Trend Break")
+
+// ─── Plotting ───
+plot(ema50, "EMA 50", color=color.new(color.blue, 0), linewidth=2)
+plot(ema100, "EMA 100", color=color.new(color.orange, 0), linewidth=2)
+plot(ema200, "EMA 200", color=color.new(color.red, 0), linewidth=3)
+
+// Trend ribbon fill
+ema50Plot  = plot(ema50, display=display.none)
+ema200Plot = plot(ema200, display=display.none)
+fill(ema50Plot, ema200Plot, color=bullTrend ? color.new(color.green, 88) : bearTrend ? color.new(color.red, 88) : color.new(color.gray, 95), title="Trend Ribbon")
+
+plotshape(longCondition or pullbackLong, title="Long", location=location.belowbar, style=shape.arrowup, color=color.green, size=size.small)
+plotshape(shortCondition or pullbackShort, title="Short", location=location.abovebar, style=shape.arrowdown, color=color.red, size=size.small)
+
+// ─── Alerts ───
+alertcondition(longCondition or pullbackLong, title="Slow & Steady Long", message="Slow & Steady: Long entry — trend aligned with momentum")
+alertcondition(shortCondition or pullbackShort, title="Slow & Steady Short", message="Slow & Steady: Short entry — trend aligned with momentum")

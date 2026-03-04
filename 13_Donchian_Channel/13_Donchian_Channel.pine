@@ -1,0 +1,90 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0
+// © TradingTools
+
+//@version=5
+strategy("Donchian Channel - Turtle Trading", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=100)
+
+// ─── Inputs ───
+entryLength     = input.int(20, "Entry Channel Length", group="Donchian")
+exitLength      = input.int(10, "Exit Channel Length", group="Donchian")
+useFilter       = input.bool(true, "Skip Entry if Previous Trade Won", group="Filters")
+atrLength       = input.int(20, "ATR Length (Position Sizing)", group="Risk Management")
+atrMult         = input.float(2.0, "ATR Multiplier for SL", step=0.1, group="Risk Management")
+trailByExit     = input.bool(true, "Use Exit Channel as Trailing Stop", group="Risk Management")
+pyramidMax      = input.int(3, "Max Pyramid Entries", minval=1, maxval=5, group="Risk Management")
+
+// ─── Donchian Channel ───
+// Entry channel (20-period)
+entryHigh = ta.highest(high, entryLength)[1]
+entryLow  = ta.lowest(low, entryLength)[1]
+
+// Exit channel (10-period)
+exitHigh  = ta.highest(high, exitLength)[1]
+exitLow   = ta.lowest(low, exitLength)[1]
+
+// Mid line
+entryMid  = (entryHigh + entryLow) / 2
+
+// ─── ATR ───
+atrVal = ta.atr(atrLength)
+
+// ─── Track Previous Trade Result ───
+var bool lastTradeWon = false
+var float lastEntryPrice = na
+
+if strategy.closedtrades > 0
+    lastPnL = strategy.closedtrades.profit(strategy.closedtrades - 1)
+    lastTradeWon := lastPnL > 0
+
+// Skip filter (Turtle System 1 rule)
+skipOK = useFilter ? not lastTradeWon : true
+
+// ─── Entry Conditions ───
+longCondition  = high >= entryHigh and skipOK
+shortCondition = low <= entryLow and skipOK
+
+// ─── Execute Trades ───
+if longCondition and strategy.position_size <= 0
+    sl = trailByExit ? exitLow : close - atrVal * atrMult
+    strategy.entry("Turtle Long", strategy.long)
+    strategy.exit("Turtle Long Exit", "Turtle Long", stop=sl)
+    lastEntryPrice := close
+
+if shortCondition and strategy.position_size >= 0
+    sl = trailByExit ? exitHigh : close + atrVal * atrMult
+    strategy.entry("Turtle Short", strategy.short)
+    strategy.exit("Turtle Short Exit", "Turtle Short", stop=sl)
+    lastEntryPrice := close
+
+// ─── Pyramid (add every 0.5 ATR move in favor) ───
+if strategy.position_size > 0 and strategy.opentrades < pyramidMax
+    if close >= lastEntryPrice + atrVal * 0.5
+        strategy.entry("Turtle Long Add", strategy.long)
+        lastEntryPrice := close
+
+if strategy.position_size < 0 and strategy.opentrades < pyramidMax
+    if close <= lastEntryPrice - atrVal * 0.5
+        strategy.entry("Turtle Short Add", strategy.short)
+        lastEntryPrice := close
+
+// ─── Exit on Opposite Channel ───
+if strategy.position_size > 0 and low <= exitLow
+    strategy.close_all(comment="Exit Channel")
+if strategy.position_size < 0 and high >= exitHigh
+    strategy.close_all(comment="Exit Channel")
+
+// ─── Plotting ───
+pEntryH = plot(entryHigh, "Entry High (20)", color=color.new(color.blue, 0), linewidth=2)
+pEntryL = plot(entryLow, "Entry Low (20)", color=color.new(color.blue, 0), linewidth=2)
+plot(entryMid, "Mid", color=color.new(color.gray, 50), linewidth=1)
+fill(pEntryH, pEntryL, color=color.new(color.blue, 92), title="Entry Channel")
+
+plot(exitHigh, "Exit High (10)", color=color.new(color.orange, 30), linewidth=1, style=plot.style_linebr)
+plot(exitLow, "Exit Low (10)", color=color.new(color.orange, 30), linewidth=1, style=plot.style_linebr)
+
+plotshape(longCondition and strategy.position_size[1] <= 0, title="Long Breakout", location=location.belowbar, style=shape.arrowup, color=color.green, size=size.small, text="TURTLE")
+plotshape(shortCondition and strategy.position_size[1] >= 0, title="Short Breakout", location=location.abovebar, style=shape.arrowdown, color=color.red, size=size.small, text="TURTLE")
+
+// ─── Alerts ───
+alertcondition(longCondition, title="Turtle Long", message="Donchian: 20-period high breakout — Long entry")
+alertcondition(shortCondition, title="Turtle Short", message="Donchian: 20-period low breakout — Short entry")

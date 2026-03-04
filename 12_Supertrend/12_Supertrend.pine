@@ -1,0 +1,82 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0
+// © TradingTools
+
+//@version=5
+strategy("Supertrend - Dynamic Trend Follower", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=100)
+
+// ─── Inputs ───
+stFactor1       = input.float(3.0, "Supertrend Factor 1", step=0.1, group="Supertrend")
+stPeriod1       = input.int(10, "Supertrend Period 1", group="Supertrend")
+stFactor2       = input.float(2.0, "Supertrend Factor 2 (Fast)", step=0.1, group="Supertrend")
+stPeriod2       = input.int(7, "Supertrend Period 2 (Fast)", group="Supertrend")
+useDualST       = input.bool(true, "Use Dual Supertrend Confirmation", group="Supertrend")
+emaLength       = input.int(200, "Trend Filter EMA", group="Filters")
+useTrendFilter  = input.bool(false, "Use EMA Trend Filter", group="Filters")
+atrLength       = input.int(14, "ATR Length", group="Risk Management")
+atrMult         = input.float(2.0, "ATR Multiplier for SL", step=0.1, group="Risk Management")
+trailAtrMult    = input.float(2.5, "Trailing Stop ATR Mult", step=0.1, group="Risk Management")
+
+// ─── Supertrend 1 (Primary) ───
+[st1, dir1] = ta.supertrend(stFactor1, stPeriod1)
+bullST1 = dir1 < 0
+bearST1 = dir1 > 0
+
+// ─── Supertrend 2 (Fast) ───
+[st2, dir2] = ta.supertrend(stFactor2, stPeriod2)
+bullST2 = dir2 < 0
+bearST2 = dir2 > 0
+
+// ─── Trend Filter ───
+emaVal = ta.ema(close, emaLength)
+emaBull = useTrendFilter ? close > emaVal : true
+emaBear = useTrendFilter ? close < emaVal : true
+
+// ─── ATR ───
+atrVal = ta.atr(atrLength)
+
+// ─── Entry Conditions ───
+// Dual: both supertrends must agree
+// Single: only primary supertrend
+stFlipLong  = bullST1 and not bullST1[1]  // primary flipped bullish
+stFlipShort = bearST1 and not bearST1[1]  // primary flipped bearish
+
+dualBull = useDualST ? (bullST1 and bullST2) : bullST1
+dualBear = useDualST ? (bearST1 and bearST2) : bearST1
+
+longCondition  = stFlipLong and (useDualST ? bullST2 : true) and emaBull
+shortCondition = stFlipShort and (useDualST ? bearST2 : true) and emaBear
+
+// ─── Execute Trades ───
+if longCondition and strategy.position_size <= 0
+    sl = close - atrVal * atrMult
+    strategy.entry("ST Long", strategy.long)
+    strategy.exit("ST Long Exit", "ST Long", stop=sl, trail_offset=atrVal * trailAtrMult, trail_points=atrVal * trailAtrMult)
+
+if shortCondition and strategy.position_size >= 0
+    sl = close + atrVal * atrMult
+    strategy.entry("ST Short", strategy.short)
+    strategy.exit("ST Short Exit", "ST Short", stop=sl, trail_offset=atrVal * trailAtrMult, trail_points=atrVal * trailAtrMult)
+
+// ─── Exit on Supertrend Flip ───
+if strategy.position_size > 0 and bearST1
+    strategy.close("ST Long", comment="ST Flip")
+if strategy.position_size < 0 and bullST1
+    strategy.close("ST Short", comment="ST Flip")
+
+// ─── Plotting ───
+plot(bullST1 ? st1 : na, "Supertrend 1 Bull", color=color.new(color.green, 0), linewidth=2, style=plot.style_linebr)
+plot(bearST1 ? st1 : na, "Supertrend 1 Bear", color=color.new(color.red, 0), linewidth=2, style=plot.style_linebr)
+
+plot(useDualST and bullST2 ? st2 : na, "Supertrend 2 Bull", color=color.new(color.green, 50), linewidth=1, style=plot.style_linebr)
+plot(useDualST and bearST2 ? st2 : na, "Supertrend 2 Bear", color=color.new(color.red, 50), linewidth=1, style=plot.style_linebr)
+
+plot(useTrendFilter ? emaVal : na, "EMA Filter", color=color.new(color.gray, 40), linewidth=1)
+
+bgcolor(dualBull ? color.new(color.green, 93) : dualBear ? color.new(color.red, 93) : na, title="Dual ST Direction")
+
+plotshape(longCondition, title="Long", location=location.belowbar, style=shape.triangleup, color=color.green, size=size.small)
+plotshape(shortCondition, title="Short", location=location.abovebar, style=shape.triangledown, color=color.red, size=size.small)
+
+// ─── Alerts ───
+alertcondition(longCondition, title="Supertrend Long", message="Supertrend: Bullish flip — Long entry")
+alertcondition(shortCondition, title="Supertrend Short", message="Supertrend: Bearish flip — Short entry")

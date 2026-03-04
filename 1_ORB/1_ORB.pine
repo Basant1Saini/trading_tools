@@ -1,0 +1,68 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0
+// © TradingTools
+
+//@version=5
+strategy("ORB - Opening Range Breakout", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=100)
+
+// ─── Inputs ───
+orbMinutes      = input.int(15, "Opening Range (minutes)", minval=5, step=5, group="ORB Settings")
+sessionStart    = input.session("0930-0945", "Opening Range Session", group="ORB Settings")
+tradeSession    = input.session("0930-1600", "Trading Session", group="ORB Settings")
+useAtrSL        = input.bool(true, "Use ATR-based Stop Loss", group="Risk Management")
+atrLength       = input.int(14, "ATR Length", group="Risk Management")
+atrMult         = input.float(1.5, "ATR Multiplier for SL", step=0.1, group="Risk Management")
+rrRatio         = input.float(2.0, "Risk:Reward Ratio", step=0.1, group="Risk Management")
+showORB         = input.bool(true, "Show ORB Zone", group="Display")
+
+// ─── Session Detection ───
+isORBSession    = not na(time(timeframe.period, sessionStart))
+isTradeSession  = not na(time(timeframe.period, tradeSession))
+
+// ─── Opening Range Calculation ───
+var float orbHigh = na
+var float orbLow  = na
+var bool  orbSet  = false
+
+if isORBSession
+    if not isORBSession[1]
+        orbHigh := high
+        orbLow  := low
+        orbSet  := false
+    else
+        orbHigh := math.max(orbHigh, high)
+        orbLow  := math.min(orbLow, low)
+else if not isORBSession and isORBSession[1]
+    orbSet := true
+
+// ─── ATR for Stop Loss ───
+atrVal = ta.atr(atrLength)
+
+// ─── Entry Conditions ───
+longCondition  = orbSet and isTradeSession and ta.crossover(close, orbHigh)
+shortCondition = orbSet and isTradeSession and ta.crossunder(close, orbLow)
+
+// ─── Execute Trades ───
+if longCondition and strategy.position_size == 0
+    stopLoss   = useAtrSL ? close - (atrVal * atrMult) : orbLow
+    takeProfit = close + (close - stopLoss) * rrRatio
+    strategy.entry("ORB Long", strategy.long)
+    strategy.exit("ORB Long Exit", "ORB Long", stop=stopLoss, limit=takeProfit)
+
+if shortCondition and strategy.position_size == 0
+    stopLoss   = useAtrSL ? close + (atrVal * atrMult) : orbHigh
+    takeProfit = close - (stopLoss - close) * rrRatio
+    strategy.entry("ORB Short", strategy.short)
+    strategy.exit("ORB Short Exit", "ORB Short", stop=stopLoss, limit=takeProfit)
+
+// ─── Close at End of Session ───
+if not isTradeSession and strategy.position_size != 0
+    strategy.close_all("Session End")
+
+// ─── Plotting ───
+orbHighLine = plot(showORB and orbSet ? orbHigh : na, "ORB High", color=color.new(color.green, 0), linewidth=2, style=plot.style_linebr)
+orbLowLine  = plot(showORB and orbSet ? orbLow : na, "ORB Low", color=color.new(color.red, 0), linewidth=2, style=plot.style_linebr)
+fill(orbHighLine, orbLowLine, color=color.new(color.blue, 85), title="ORB Zone")
+
+// ─── Alerts ───
+alertcondition(longCondition, title="ORB Long Breakout", message="ORB: Price broke above Opening Range High")
+alertcondition(shortCondition, title="ORB Short Breakdown", message="ORB: Price broke below Opening Range Low")

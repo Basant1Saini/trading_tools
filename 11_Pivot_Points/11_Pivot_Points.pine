@@ -1,0 +1,97 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0
+// © TradingTools
+
+//@version=5
+strategy("Pivot Points - S/R Trading", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=100)
+
+// ─── Inputs ───
+pivotType       = input.string("Traditional", "Pivot Type", options=["Traditional", "Fibonacci", "Camarilla"], group="Pivot Settings")
+pivotTF         = input.timeframe("D", "Pivot Timeframe", group="Pivot Settings")
+entryMode       = input.string("Bounce", "Entry Mode", options=["Bounce", "Breakout"], group="Entry")
+bounceBuffer    = input.float(0.15, "Bounce Buffer (%)", step=0.05, group="Entry")
+atrLength       = input.int(14, "ATR Length", group="Risk Management")
+atrMult         = input.float(1.5, "ATR Multiplier for SL", step=0.1, group="Risk Management")
+rrRatio         = input.float(2.0, "Risk:Reward Ratio", step=0.1, group="Risk Management")
+
+// ─── Previous Period Data ───
+prevHigh  = request.security(syminfo.tickerid, pivotTF, high[1], barmerge.gaps_off, barmerge.lookahead_on)
+prevLow   = request.security(syminfo.tickerid, pivotTF, low[1], barmerge.gaps_off, barmerge.lookahead_on)
+prevClose = request.security(syminfo.tickerid, pivotTF, close[1], barmerge.gaps_off, barmerge.lookahead_on)
+
+// ─── Pivot Calculation ───
+pp = (prevHigh + prevLow + prevClose) / 3
+
+var float s1 = na, var float s2 = na, var float s3 = na
+var float r1 = na, var float r2 = na, var float r3 = na
+
+if pivotType == "Traditional"
+    r1 := 2 * pp - prevLow
+    s1 := 2 * pp - prevHigh
+    r2 := pp + (prevHigh - prevLow)
+    s2 := pp - (prevHigh - prevLow)
+    r3 := prevHigh + 2 * (pp - prevLow)
+    s3 := prevLow - 2 * (prevHigh - pp)
+else if pivotType == "Fibonacci"
+    r1 := pp + 0.382 * (prevHigh - prevLow)
+    s1 := pp - 0.382 * (prevHigh - prevLow)
+    r2 := pp + 0.618 * (prevHigh - prevLow)
+    s2 := pp - 0.618 * (prevHigh - prevLow)
+    r3 := pp + 1.000 * (prevHigh - prevLow)
+    s3 := pp - 1.000 * (prevHigh - prevLow)
+else // Camarilla
+    r1 := prevClose + (prevHigh - prevLow) * 1.1 / 12
+    s1 := prevClose - (prevHigh - prevLow) * 1.1 / 12
+    r2 := prevClose + (prevHigh - prevLow) * 1.1 / 6
+    s2 := prevClose - (prevHigh - prevLow) * 1.1 / 6
+    r3 := prevClose + (prevHigh - prevLow) * 1.1 / 4
+    s3 := prevClose - (prevHigh - prevLow) * 1.1 / 4
+
+// ─── ATR ───
+atrVal = ta.atr(atrLength)
+
+// ─── Bounce Entries ───
+buf = close * (bounceBuffer / 100)
+
+bounceLongS1  = low <= s1 + buf and close > s1 and entryMode == "Bounce"
+bounceLongS2  = low <= s2 + buf and close > s2 and entryMode == "Bounce"
+bounceShortR1 = high >= r1 - buf and close < r1 and entryMode == "Bounce"
+bounceShortR2 = high >= r2 - buf and close < r2 and entryMode == "Bounce"
+
+// ─── Breakout Entries ───
+breakLongR1  = ta.crossover(close, r1) and entryMode == "Breakout"
+breakLongR2  = ta.crossover(close, r2) and entryMode == "Breakout"
+breakShortS1 = ta.crossunder(close, s1) and entryMode == "Breakout"
+breakShortS2 = ta.crossunder(close, s2) and entryMode == "Breakout"
+
+// ─── Combined ───
+longCondition  = bounceLongS1 or bounceLongS2 or breakLongR1 or breakLongR2
+shortCondition = bounceShortR1 or bounceShortR2 or breakShortS1 or breakShortS2
+
+// ─── Execute Trades ───
+if longCondition and strategy.position_size == 0
+    sl = close - atrVal * atrMult
+    tp = close + (close - sl) * rrRatio
+    strategy.entry("Pivot Long", strategy.long)
+    strategy.exit("Pivot Long Exit", "Pivot Long", stop=sl, limit=tp)
+
+if shortCondition and strategy.position_size == 0
+    sl = close + atrVal * atrMult
+    tp = close - (sl - close) * rrRatio
+    strategy.entry("Pivot Short", strategy.short)
+    strategy.exit("Pivot Short Exit", "Pivot Short", stop=sl, limit=tp)
+
+// ─── Plotting ───
+plot(pp, "Pivot", color=color.new(color.yellow, 0), linewidth=2, style=plot.style_linebr)
+plot(r1, "R1", color=color.new(color.red, 30), style=plot.style_linebr)
+plot(r2, "R2", color=color.new(color.red, 10), style=plot.style_linebr)
+plot(r3, "R3", color=color.new(color.red, 0), linewidth=2, style=plot.style_linebr)
+plot(s1, "S1", color=color.new(color.green, 30), style=plot.style_linebr)
+plot(s2, "S2", color=color.new(color.green, 10), style=plot.style_linebr)
+plot(s3, "S3", color=color.new(color.green, 0), linewidth=2, style=plot.style_linebr)
+
+plotshape(longCondition, title="Pivot Long", location=location.belowbar, style=shape.circle, color=color.green, size=size.tiny)
+plotshape(shortCondition, title="Pivot Short", location=location.abovebar, style=shape.circle, color=color.red, size=size.tiny)
+
+// ─── Alerts ───
+alertcondition(longCondition, title="Pivot Long", message="Pivot Points: Long entry at support")
+alertcondition(shortCondition, title="Pivot Short", message="Pivot Points: Short entry at resistance")

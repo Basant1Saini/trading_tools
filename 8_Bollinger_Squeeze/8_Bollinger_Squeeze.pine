@@ -1,0 +1,81 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0
+// © TradingTools
+
+//@version=5
+strategy("Bollinger Band Squeeze - Volatility Breakout", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=100)
+
+// ─── Inputs ───
+bbLength        = input.int(20, "BB Length", group="Bollinger Bands")
+bbMult          = input.float(2.0, "BB StdDev Multiplier", step=0.1, group="Bollinger Bands")
+kcLength        = input.int(20, "Keltner Channel Length", group="Keltner Channel")
+kcMult          = input.float(1.5, "KC ATR Multiplier", step=0.1, group="Keltner Channel")
+momLength       = input.int(12, "Momentum Length", group="Momentum")
+useVolConfirm   = input.bool(true, "Require Volume Confirmation", group="Filters")
+volLength       = input.int(20, "Volume MA Length", group="Filters")
+volMult         = input.float(1.2, "Volume Multiplier", step=0.1, group="Filters")
+atrLength       = input.int(14, "ATR Length", group="Risk Management")
+atrMult         = input.float(2.0, "ATR Multiplier for SL", step=0.1, group="Risk Management")
+rrRatio         = input.float(2.5, "Risk:Reward Ratio", step=0.1, group="Risk Management")
+
+// ─── Bollinger Bands ───
+bbBasis = ta.sma(close, bbLength)
+bbDev   = ta.stdev(close, bbLength) * bbMult
+bbUpper = bbBasis + bbDev
+bbLower = bbBasis - bbDev
+
+// ─── Keltner Channel ───
+kcBasis = ta.ema(close, kcLength)
+kcAtr   = ta.atr(kcLength)
+kcUpper = kcBasis + kcAtr * kcMult
+kcLower = kcBasis - kcAtr * kcMult
+
+// ─── Squeeze Detection ───
+// Squeeze = BB inside KC (low volatility)
+squeeze     = bbLower > kcLower and bbUpper < kcUpper
+noSqueeze   = not squeeze
+squeezeFire = noSqueeze and squeeze[1]  // squeeze just released
+
+// ─── Momentum (linear regression) ───
+mom = ta.linreg(close - bbBasis, momLength, 0)
+momUp   = mom > 0 and mom > mom[1]
+momDown = mom < 0 and mom < mom[1]
+
+// ─── Volume ───
+volMA   = ta.sma(volume, volLength)
+volOK   = useVolConfirm ? volume > volMA * volMult : true
+
+// ─── ATR ───
+atrVal  = ta.atr(atrLength)
+
+// ─── Entry Conditions ───
+longCondition  = squeezeFire and momUp and volOK
+shortCondition = squeezeFire and momDown and volOK
+
+// ─── Execute Trades ───
+if longCondition and strategy.position_size == 0
+    sl = close - atrVal * atrMult
+    tp = close + (close - sl) * rrRatio
+    strategy.entry("Squeeze Long", strategy.long)
+    strategy.exit("Squeeze Long Exit", "Squeeze Long", stop=sl, limit=tp)
+
+if shortCondition and strategy.position_size == 0
+    sl = close + atrVal * atrMult
+    tp = close - (sl - close) * rrRatio
+    strategy.entry("Squeeze Short", strategy.short)
+    strategy.exit("Squeeze Short Exit", "Squeeze Short", stop=sl, limit=tp)
+
+// ─── Plotting ───
+plot(bbUpper, "BB Upper", color=color.new(color.blue, 30))
+plot(bbBasis, "BB Basis", color=color.new(color.blue, 60))
+plot(bbLower, "BB Lower", color=color.new(color.blue, 30))
+
+// Squeeze dots on the zero line
+bgcolor(squeeze ? color.new(color.orange, 85) : na, title="Squeeze Active")
+
+plotshape(longCondition, title="Squeeze Long", location=location.belowbar, style=shape.diamond, color=color.lime, size=size.small, text="SQZ")
+plotshape(shortCondition, title="Squeeze Short", location=location.abovebar, style=shape.diamond, color=color.red, size=size.small, text="SQZ")
+
+// ─── Alerts ───
+alertcondition(squeeze and not squeeze[1], title="Squeeze Started", message="BB Squeeze: Volatility compression detected")
+alertcondition(longCondition, title="Squeeze Long Breakout", message="BB Squeeze: Bullish breakout from squeeze")
+alertcondition(shortCondition, title="Squeeze Short Breakout", message="BB Squeeze: Bearish breakout from squeeze")

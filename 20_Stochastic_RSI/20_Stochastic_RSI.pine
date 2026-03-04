@@ -1,0 +1,56 @@
+//@version=5
+strategy("Stochastic RSI Crossover", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=10)
+
+// === INPUTS ===
+rsiLen      = input.int(14, "RSI Length", minval=5)
+stochLen    = input.int(14, "Stochastic Length", minval=5)
+kSmooth     = input.int(3, "K Smoothing", minval=1)
+dSmooth     = input.int(3, "D Smoothing", minval=1)
+obLevel     = input.float(80, "Overbought Level", step=5)
+osLevel     = input.float(20, "Oversold Level", step=5)
+emaLen      = input.int(50, "Trend EMA Length", minval=10)
+useTrend    = input.bool(true, "Use Trend Filter")
+atrLen      = input.int(14, "ATR Length")
+atrMult     = input.float(1.5, "ATR Multiplier (SL)", step=0.1)
+rrRatio     = input.float(2.0, "Risk:Reward", step=0.1)
+
+// === CALCULATIONS ===
+rsi     = ta.rsi(close, rsiLen)
+stochK  = ta.sma(ta.stoch(rsi, rsi, rsi, stochLen), kSmooth)
+stochD  = ta.sma(stochK, dSmooth)
+
+ema     = ta.ema(close, emaLen)
+atr     = ta.atr(atrLen)
+
+trendUp = not useTrend or close > ema
+trendDn = not useTrend or close < ema
+
+// === SIGNALS ===
+// Long: StochRSI K crosses above D from oversold zone
+longSignal  = ta.crossover(stochK, stochD) and stochK[1] < osLevel and trendUp
+// Short: StochRSI K crosses below D from overbought zone
+shortSignal = ta.crossunder(stochK, stochD) and stochK[1] > obLevel and trendDn
+
+// === ENTRIES ===
+if longSignal and strategy.position_size == 0
+    sl = close - atr * atrMult
+    tp = close + (close - sl) * rrRatio
+    strategy.entry("StRSIL", strategy.long)
+    strategy.exit("StRSILX", "StRSIL", stop=sl, limit=tp)
+
+if shortSignal and strategy.position_size == 0
+    sl = close + atr * atrMult
+    tp = close - (sl - close) * rrRatio
+    strategy.entry("StRSIS", strategy.short)
+    strategy.exit("StRSISX", "StRSIS", stop=sl, limit=tp)
+
+// === PLOTS ===
+plot(ema, "Trend EMA", color.orange, 2)
+plotshape(longSignal, "StRSI Long", shape.labelup, location.belowbar, color.new(color.green, 0), text="StRSI↑", textcolor=color.white)
+plotshape(shortSignal, "StRSI Short", shape.labeldown, location.abovebar, color.new(color.red, 0), text="StRSI↓", textcolor=color.white)
+
+// StochRSI in separate pane
+var table stochTable = table.new(position.top_right, 1, 2, bgcolor=color.new(color.black, 80))
+if barstate.islast
+    table.cell(stochTable, 0, 0, "K: " + str.tostring(stochK, "#.0"), text_color=stochK > obLevel ? color.red : stochK < osLevel ? color.green : color.white, text_size=size.small)
+    table.cell(stochTable, 0, 1, "D: " + str.tostring(stochD, "#.0"), text_color=color.gray, text_size=size.small)

@@ -1,0 +1,60 @@
+//@version=5
+strategy("Parabolic SAR Trend", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=10)
+
+// === INPUTS ===
+sarStart    = input.float(0.02, "SAR Start", step=0.005)
+sarInc      = input.float(0.02, "SAR Increment", step=0.005)
+sarMax      = input.float(0.2, "SAR Maximum", step=0.01)
+emaLen      = input.int(50, "Trend EMA Length", minval=10)
+useTrend    = input.bool(true, "Use Trend Filter")
+adxLen      = input.int(14, "ADX Length", minval=5)
+adxThresh   = input.float(20, "ADX Minimum (trend strength)", step=1)
+useADX      = input.bool(true, "Use ADX Filter")
+atrLen      = input.int(14, "ATR Length")
+atrMult     = input.float(2.0, "ATR Multiplier (SL)", step=0.1)
+rrRatio     = input.float(2.0, "Risk:Reward", step=0.1)
+
+// === CALCULATIONS ===
+sar = ta.sar(sarStart, sarInc, sarMax)
+ema = ta.ema(close, emaLen)
+atr = ta.atr(atrLen)
+
+// ADX
+[diPlus, diMinus, adxVal] = ta.dmi(adxLen, adxLen)
+strongTrend = not useADX or adxVal > adxThresh
+
+trendUp = not useTrend or close > ema
+trendDn = not useTrend or close < ema
+
+// SAR flip detection
+sarBullFlip = sar < close and sar[1] > close[1]
+sarBearFlip = sar > close and sar[1] < close[1]
+
+// === SIGNALS ===
+longSignal  = sarBullFlip and trendUp and strongTrend
+shortSignal = sarBearFlip and trendDn and strongTrend
+
+// === ENTRIES ===
+if longSignal and strategy.position_size <= 0
+    sl = close - atr * atrMult
+    tp = close + (close - sl) * rrRatio
+    strategy.entry("SARL", strategy.long)
+    strategy.exit("SARLX", "SARL", stop=sl, limit=tp)
+
+if shortSignal and strategy.position_size >= 0
+    sl = close + atr * atrMult
+    tp = close - (sl - close) * rrRatio
+    strategy.entry("SARS", strategy.short)
+    strategy.exit("SARSX", "SARS", stop=sl, limit=tp)
+
+// SAR flip exit
+if strategy.position_size > 0 and sar > close
+    strategy.close("SARL", comment="SAR Flip")
+if strategy.position_size < 0 and sar < close
+    strategy.close("SARS", comment="SAR Flip")
+
+// === PLOTS ===
+plot(sar, "Parabolic SAR", sar < close ? color.green : color.red, 1, plot.style_circles)
+plot(ema, "Trend EMA", color.orange, 2)
+plotshape(longSignal, "SAR Long", shape.labelup, location.belowbar, color.new(color.green, 0), text="SAR↑", textcolor=color.white)
+plotshape(shortSignal, "SAR Short", shape.labeldown, location.abovebar, color.new(color.red, 0), text="SAR↓", textcolor=color.white)

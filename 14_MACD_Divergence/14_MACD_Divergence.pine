@@ -1,0 +1,107 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0
+// © TradingTools
+
+//@version=5
+strategy("MACD Divergence - Reversal Hunter", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=100)
+
+// ─── Inputs ───
+macdFast        = input.int(12, "MACD Fast", group="MACD")
+macdSlow        = input.int(26, "MACD Slow", group="MACD")
+macdSignal      = input.int(9, "MACD Signal", group="MACD")
+pivotLookback   = input.int(5, "Pivot Lookback", group="Divergence")
+pivotLookfwd    = input.int(2, "Pivot Look Forward", group="Divergence")
+useRegular      = input.bool(true, "Trade Regular Divergence", group="Divergence")
+useHidden       = input.bool(true, "Trade Hidden Divergence", group="Divergence")
+rsiLength       = input.int(14, "RSI Confirmation Length", group="Filters")
+rsiOB           = input.float(70, "RSI Overbought", group="Filters")
+rsiOS           = input.float(30, "RSI Oversold", group="Filters")
+useRSIFilter    = input.bool(true, "Use RSI Extreme Filter", group="Filters")
+atrLength       = input.int(14, "ATR Length", group="Risk Management")
+atrMult         = input.float(2.0, "ATR Multiplier for SL", step=0.1, group="Risk Management")
+rrRatio         = input.float(2.0, "Risk:Reward Ratio", step=0.1, group="Risk Management")
+
+// ─── MACD ───
+[macdLine, signalLine, hist] = ta.macd(close, macdFast, macdSlow, macdSignal)
+
+// ─── RSI ───
+rsiVal = ta.rsi(close, rsiLength)
+
+// ─── ATR ───
+atrVal = ta.atr(atrLength)
+
+// ─── Pivot Detection on Price and MACD ───
+pricePivotLow  = ta.pivotlow(low, pivotLookback, pivotLookfwd)
+pricePivotHigh = ta.pivothigh(high, pivotLookback, pivotLookfwd)
+macdPivotLow   = ta.pivotlow(macdLine, pivotLookback, pivotLookfwd)
+macdPivotHigh  = ta.pivothigh(macdLine, pivotLookback, pivotLookfwd)
+
+// ─── Store Previous Pivots ───
+var float prevPriceLow   = na
+var float prevMACDLow    = na
+var float prevPriceHigh  = na
+var float prevMACDHigh   = na
+
+var float currPriceLow   = na
+var float currMACDLow    = na
+var float currPriceHigh  = na
+var float currMACDHigh   = na
+
+if not na(pricePivotLow) and not na(macdPivotLow)
+    prevPriceLow := currPriceLow
+    prevMACDLow  := currMACDLow
+    currPriceLow := pricePivotLow
+    currMACDLow  := macdPivotLow
+
+if not na(pricePivotHigh) and not na(macdPivotHigh)
+    prevPriceHigh := currPriceHigh
+    prevMACDHigh  := currMACDHigh
+    currPriceHigh := pricePivotHigh
+    currMACDHigh  := macdPivotHigh
+
+// ─── Divergence Detection ───
+// Regular Bullish: Price lower low + MACD higher low (reversal up)
+regBullDiv = not na(prevPriceLow) and currPriceLow < prevPriceLow and currMACDLow > prevMACDLow
+// Regular Bearish: Price higher high + MACD lower high (reversal down)
+regBearDiv = not na(prevPriceHigh) and currPriceHigh > prevPriceHigh and currMACDHigh < prevMACDHigh
+// Hidden Bullish: Price higher low + MACD lower low (continuation up)
+hidBullDiv = not na(prevPriceLow) and currPriceLow > prevPriceLow and currMACDLow < prevMACDLow
+// Hidden Bearish: Price lower high + MACD higher high (continuation down)
+hidBearDiv = not na(prevPriceHigh) and currPriceHigh < prevPriceHigh and currMACDHigh > prevMACDHigh
+
+// ─── RSI Filter ───
+rsiLongOK  = useRSIFilter ? rsiVal < rsiOB : true
+rsiShortOK = useRSIFilter ? rsiVal > rsiOS : true
+
+// ─── Entry Conditions ───
+bullDiv = (useRegular and regBullDiv) or (useHidden and hidBullDiv)
+bearDiv = (useRegular and regBearDiv) or (useHidden and hidBearDiv)
+
+// Trigger on new pivot detection + MACD histogram confirmation
+longCondition  = bullDiv and not na(pricePivotLow) and hist > hist[1] and rsiLongOK
+shortCondition = bearDiv and not na(pricePivotHigh) and hist < hist[1] and rsiShortOK
+
+// ─── Execute Trades ───
+if longCondition and strategy.position_size == 0
+    sl = close - atrVal * atrMult
+    tp = close + (close - sl) * rrRatio
+    strategy.entry("Div Long", strategy.long)
+    strategy.exit("Div Long Exit", "Div Long", stop=sl, limit=tp)
+
+if shortCondition and strategy.position_size == 0
+    sl = close + atrVal * atrMult
+    tp = close - (sl - close) * rrRatio
+    strategy.entry("Div Short", strategy.short)
+    strategy.exit("Div Short Exit", "Div Short", stop=sl, limit=tp)
+
+// ─── Plotting ───
+plotshape(longCondition, title="Bull Divergence", location=location.belowbar, style=shape.diamond, color=color.lime, size=size.small, text="DIV")
+plotshape(shortCondition, title="Bear Divergence", location=location.abovebar, style=shape.diamond, color=color.fuchsia, size=size.small, text="DIV")
+
+// MACD reference (non-overlay, will show in separate pane if added)
+// Users can add MACD indicator separately for visual confirmation
+
+// ─── Alerts ───
+alertcondition(longCondition, title="MACD Div Long", message="MACD Divergence: Bullish divergence detected — Long entry")
+alertcondition(shortCondition, title="MACD Div Short", message="MACD Divergence: Bearish divergence detected — Short entry")
+alertcondition(regBullDiv, title="Regular Bull Div", message="MACD: Regular bullish divergence forming")
+alertcondition(regBearDiv, title="Regular Bear Div", message="MACD: Regular bearish divergence forming")

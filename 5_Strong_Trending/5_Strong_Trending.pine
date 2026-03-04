@@ -1,0 +1,99 @@
+// This Pine Script™ code is subject to the terms of the Mozilla Public License 2.0
+// © TradingTools
+
+//@version=5
+strategy("Strong Trending - Momentum Rider", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=100)
+
+// ─── Inputs ───
+emaFastLen      = input.int(9, "Fast EMA Length", group="Moving Averages")
+emaSlowLen      = input.int(21, "Slow EMA Length", group="Moving Averages")
+emaTrendLen     = input.int(50, "Trend EMA Length", group="Moving Averages")
+adxLength       = input.int(14, "ADX Length", group="ADX")
+adxSmoothing    = input.int(14, "ADX Smoothing", group="ADX")
+adxMin          = input.float(25, "Min ADX for Strong Trend", step=1, group="ADX")
+adxStrong       = input.float(40, "Strong Trend ADX", step=1, group="ADX")
+volMultiplier   = input.float(1.5, "Volume Spike Multiplier", step=0.1, group="Volume")
+volLength       = input.int(20, "Volume MA Length", group="Volume")
+useVolumeFilter = input.bool(true, "Require Volume Confirmation", group="Volume")
+atrLength       = input.int(14, "ATR Length", group="Risk Management")
+atrMult         = input.float(1.5, "ATR Multiplier for SL", step=0.1, group="Risk Management")
+trailAtrMult    = input.float(2.0, "Trailing Stop ATR Mult", step=0.1, group="Risk Management")
+pyramidMax      = input.int(2, "Max Pyramid Entries", minval=1, maxval=5, group="Risk Management")
+
+// ─── Calculations ───
+emaFast  = ta.ema(close, emaFastLen)
+emaSlow  = ta.ema(close, emaSlowLen)
+emaTrend = ta.ema(close, emaTrendLen)
+atrVal   = ta.atr(atrLength)
+
+// ─── ADX ───
+[diPlus, diMinus, adxVal] = ta.dmi(adxLength, adxSmoothing)
+strongTrend   = adxVal >= adxMin
+veryStrong    = adxVal >= adxStrong
+
+// ─── Volume Confirmation ───
+volMA       = ta.sma(volume, volLength)
+volSpike    = volume >= volMA * volMultiplier
+volOK       = useVolumeFilter ? volSpike : true
+
+// ─── Momentum Score ───
+// Composite score: trend alignment + ADX + volume + candle strength
+bullCandle = close > open and (close - open) > (high - low) * 0.6
+bearCandle = close < open and (open - close) > (high - low) * 0.6
+
+momentumBull = (emaFast > emaSlow ? 1 : 0) + (close > emaTrend ? 1 : 0) + (strongTrend and diPlus > diMinus ? 1 : 0) + (volOK ? 1 : 0) + (bullCandle ? 1 : 0)
+momentumBear = (emaFast < emaSlow ? 1 : 0) + (close < emaTrend ? 1 : 0) + (strongTrend and diMinus > diPlus ? 1 : 0) + (volOK ? 1 : 0) + (bearCandle ? 1 : 0)
+
+// ─── Entry Conditions ───
+// Require at least 4/5 momentum score + EMA crossover for initial entry
+longEntry    = ta.crossover(emaFast, emaSlow) and momentumBull >= 4 and close > emaTrend
+shortEntry   = ta.crossunder(emaFast, emaSlow) and momentumBear >= 4 and close < emaTrend
+
+// Pyramid: add to position if trend gets even stronger
+pyramidLong  = strategy.position_size > 0 and veryStrong and diPlus > diMinus and volOK and momentumBull >= 4
+pyramidShort = strategy.position_size < 0 and veryStrong and diMinus > diPlus and volOK and momentumBear >= 4
+
+// ─── Execute Trades ───
+if longEntry and strategy.position_size <= 0
+    sl = close - atrVal * atrMult
+    strategy.entry("Trend Long", strategy.long)
+    strategy.exit("Trend Long Exit", "Trend Long", stop=sl, trail_offset=atrVal * trailAtrMult, trail_points=atrVal * trailAtrMult)
+
+if shortEntry and strategy.position_size >= 0
+    sl = close + atrVal * atrMult
+    strategy.entry("Trend Short", strategy.short)
+    strategy.exit("Trend Short Exit", "Trend Short", stop=sl, trail_offset=atrVal * trailAtrMult, trail_points=atrVal * trailAtrMult)
+
+// Pyramid entries
+if pyramidLong and strategy.opentrades < pyramidMax
+    strategy.entry("Trend Long Add", strategy.long)
+
+if pyramidShort and strategy.opentrades < pyramidMax
+    strategy.entry("Trend Short Add", strategy.short)
+
+// ─── Exit on Trend Exhaustion ───
+if strategy.position_size > 0 and (ta.crossunder(emaFast, emaSlow) or adxVal < adxMin)
+    strategy.close_all(comment="Trend Exhausted")
+if strategy.position_size < 0 and (ta.crossover(emaFast, emaSlow) or adxVal < adxMin)
+    strategy.close_all(comment="Trend Exhausted")
+
+// ─── Plotting ───
+plot(emaFast, "Fast EMA", color=color.new(color.teal, 0), linewidth=2)
+plot(emaSlow, "Slow EMA", color=color.new(color.orange, 0), linewidth=2)
+plot(emaTrend, "Trend EMA", color=color.new(color.white, 30), linewidth=3)
+
+// ADX-based trend strength background
+bgColor = veryStrong ? (diPlus > diMinus ? color.new(color.green, 85) : color.new(color.red, 85)) : strongTrend ? (diPlus > diMinus ? color.new(color.green, 93) : color.new(color.red, 93)) : na
+bgcolor(bgColor, title="Trend Strength")
+
+// Momentum score label
+plotshape(longEntry, title="Long Entry", location=location.belowbar, style=shape.triangleup, color=color.lime, size=size.normal, text="STRONG")
+plotshape(shortEntry, title="Short Entry", location=location.abovebar, style=shape.triangledown, color=color.fuchsia, size=size.normal, text="STRONG")
+
+// Volume spike markers
+plotshape(volSpike and strongTrend, title="Vol Spike", location=location.bottom, style=shape.circle, color=color.new(color.yellow, 30), size=size.tiny)
+
+// ─── Alerts ───
+alertcondition(longEntry, title="Strong Trend Long", message="Strong Trending: Bullish momentum confirmed — Long entry")
+alertcondition(shortEntry, title="Strong Trend Short", message="Strong Trending: Bearish momentum confirmed — Short entry")
+alertcondition(veryStrong and volSpike, title="Very Strong Trend + Volume", message="Strong Trending: Very strong trend with volume spike detected")

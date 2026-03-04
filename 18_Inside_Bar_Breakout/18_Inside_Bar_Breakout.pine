@@ -1,0 +1,83 @@
+//@version=5
+strategy("Inside Bar Breakout", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=10)
+
+// === INPUTS ===
+lookForDouble   = input.bool(true, "Detect Double Inside Bars", tooltip="2 consecutive inside bars = stronger setup")
+emaLen          = input.int(50, "Trend EMA Length", minval=10)
+useTrendFilter  = input.bool(true, "Trade Only With Trend")
+volFilter       = input.bool(true, "Volume Confirmation on Breakout")
+volMult         = input.float(1.3, "Volume Multiplier", step=0.1)
+atrLen          = input.int(14, "ATR Length")
+atrMult         = input.float(1.5, "ATR Multiplier (SL)", step=0.1)
+rrRatio         = input.float(2.0, "Risk:Reward", step=0.1)
+buffer          = input.float(0.1, "Breakout Buffer %", step=0.05)
+
+// === CALCULATIONS ===
+motherHigh  = high[1]
+motherLow   = low[1]
+isInsideBar = high <= motherHigh and low >= motherLow
+
+// Double inside bar (current and previous both inside the bar before previous)
+grandMotherHigh = high[2]
+grandMotherLow  = low[2]
+isDoubleInside  = isInsideBar and high[1] <= grandMotherHigh and low[1] >= grandMotherLow
+
+insideDetected = lookForDouble ? isDoubleInside : isInsideBar
+
+// Reference levels (mother bar or grandmother bar)
+refHigh = lookForDouble and isDoubleInside ? grandMotherHigh : motherHigh
+refLow  = lookForDouble and isDoubleInside ? grandMotherLow : motherLow
+bufferAmt = refHigh * buffer / 100
+
+ema     = ta.ema(close, emaLen)
+atr     = ta.atr(atrLen)
+avgVol  = ta.sma(volume, 20)
+highVol = not volFilter or volume >= avgVol * volMult
+
+trendUp = not useTrendFilter or close > ema
+trendDn = not useTrendFilter or close < ema
+
+// === SIGNALS ===
+var bool pendingLong = false
+var bool pendingShort = false
+var float breakHigh = na
+var float breakLow = na
+
+if insideDetected
+    breakHigh := refHigh + bufferAmt
+    breakLow  := refLow - bufferAmt
+    pendingLong  := true
+    pendingShort := true
+
+longBreak  = pendingLong and close > breakHigh and highVol and trendUp
+shortBreak = pendingShort and close < breakLow and highVol and trendDn
+
+if longBreak
+    pendingLong := false
+if shortBreak
+    pendingShort := false
+
+// Reset after 5 bars
+if ta.barssince(insideDetected) > 5
+    pendingLong  := false
+    pendingShort := false
+
+// === ENTRIES ===
+if longBreak and strategy.position_size == 0
+    sl = close - atr * atrMult
+    tp = close + (close - sl) * rrRatio
+    strategy.entry("IBLong", strategy.long)
+    strategy.exit("IBLongX", "IBLong", stop=sl, limit=tp)
+
+if shortBreak and strategy.position_size == 0
+    sl = close + atr * atrMult
+    tp = close - (sl - close) * rrRatio
+    strategy.entry("IBShort", strategy.short)
+    strategy.exit("IBShortX", "IBShort", stop=sl, limit=tp)
+
+// === PLOTS ===
+plot(ema, "Trend EMA", color.orange, 2)
+bgcolor(insideDetected ? color.new(color.blue, 85) : na)
+plotshape(insideDetected, "Inside Bar", shape.diamond, location.abovebar, color.new(color.blue, 0), text="IB")
+plotshape(longBreak, "IB Long", shape.labelup, location.belowbar, color.green, text="IB↑", textcolor=color.white)
+plotshape(shortBreak, "IB Short", shape.labeldown, location.abovebar, color.red, text="IB↓", textcolor=color.white)

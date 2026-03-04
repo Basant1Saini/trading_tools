@@ -1,0 +1,60 @@
+//@version=5
+strategy("Double EMA Crossover", overlay=true, default_qty_type=strategy.percent_of_equity, default_qty_value=10)
+
+// === INPUTS ===
+fastLen     = input.int(9, "Fast EMA", minval=3)
+slowLen     = input.int(21, "Slow EMA", minval=5)
+trendLen    = input.int(200, "Trend EMA (200)", minval=50)
+useTrend    = input.bool(true, "Use 200 EMA Trend Filter")
+useMACD     = input.bool(true, "Use MACD Confirmation")
+macdFast    = input.int(12, "MACD Fast")
+macdSlow    = input.int(26, "MACD Slow")
+macdSignal  = input.int(9, "MACD Signal")
+atrLen      = input.int(14, "ATR Length")
+atrMult     = input.float(2.0, "ATR Multiplier (SL)", step=0.1)
+rrRatio     = input.float(2.0, "Risk:Reward", step=0.1)
+trailATR    = input.float(2.5, "Trailing ATR Multiplier", step=0.1)
+
+// === CALCULATIONS ===
+emaFast  = ta.ema(close, fastLen)
+emaSlow  = ta.ema(close, slowLen)
+ema200   = ta.ema(close, trendLen)
+atr      = ta.atr(atrLen)
+
+[macdLine, signalLine, hist] = ta.macd(close, macdFast, macdSlow, macdSignal)
+macdBull = not useMACD or (macdLine > signalLine)
+macdBear = not useMACD or (macdLine < signalLine)
+
+trendUp = not useTrend or close > ema200
+trendDn = not useTrend or close < ema200
+
+// === SIGNALS ===
+goldenCross = ta.crossover(emaFast, emaSlow) and trendUp and macdBull
+deathCross  = ta.crossunder(emaFast, emaSlow) and trendDn and macdBear
+
+// === ENTRIES ===
+if goldenCross and strategy.position_size <= 0
+    sl = close - atr * atrMult
+    tp = close + (close - sl) * rrRatio
+    strategy.entry("GoldenX", strategy.long)
+    strategy.exit("GoldenXX", "GoldenX", stop=sl, limit=tp)
+
+if deathCross and strategy.position_size >= 0
+    sl = close + atr * atrMult
+    tp = close - (sl - close) * rrRatio
+    strategy.entry("DeathX", strategy.short)
+    strategy.exit("DeathXX", "DeathX", stop=sl, limit=tp)
+
+// Opposite cross exit
+if strategy.position_size > 0 and ta.crossunder(emaFast, emaSlow)
+    strategy.close("GoldenX", comment="Cross Exit")
+if strategy.position_size < 0 and ta.crossover(emaFast, emaSlow)
+    strategy.close("DeathX", comment="Cross Exit")
+
+// === PLOTS ===
+plot(emaFast, "Fast EMA", color.green, 2)
+plot(emaSlow, "Slow EMA", color.red, 2)
+plot(ema200, "EMA 200", color.gray, 1, plot.style_line)
+fill(plot(emaFast, display=display.none), plot(emaSlow, display=display.none), emaFast > emaSlow ? color.new(color.green, 90) : color.new(color.red, 90))
+plotshape(goldenCross, "Golden Cross", shape.labelup, location.belowbar, color.new(color.green, 0), text="GX↑", textcolor=color.white)
+plotshape(deathCross, "Death Cross", shape.labeldown, location.abovebar, color.new(color.red, 0), text="DX↓", textcolor=color.white)
